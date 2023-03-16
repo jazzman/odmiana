@@ -1,0 +1,14 @@
+services:
+  mongo:
+    container_name: odmiana_mongo
+    image: mongo
+    restart: always
+    volumes:
+     - ./mongo/data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_ROOT_DATABASE: ${MONGO_DATABASE}
+    command: --quiet
+    ports:
+      - "${MONGO_PORT}:27017"

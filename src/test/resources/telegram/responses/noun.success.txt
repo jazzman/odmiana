@@ -1,0 +1,11 @@
+*kobieta* - woman
+
+__LICZBA POJEDYNCZA__ | __MNOGA__
+
+*M* (Kto? Co?): kobieta | kobiety
+*D* (Kogo? Czego?): kobiety | kobiet
+*C* (Komu? Czemu?): *kobiecie* 👈 | kobietom
+*B* (Kogo? Co?): kobietę | kobiety
+*N* (Kim? Czym?): kobietą | kobietami
+*M* (O kim? O czym?): *kobiecie* 👈 | kobietach
+*W* (O!): kobieto | kobiety

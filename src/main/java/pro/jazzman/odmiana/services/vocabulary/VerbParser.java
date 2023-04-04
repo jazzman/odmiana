@@ -9,6 +9,7 @@ import pro.jazzman.odmiana.helpers.Language;
 import pro.jazzman.odmiana.services.parsing.Table;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,7 +32,7 @@ public class VerbParser implements Parser {
         var pastN = rows.row(6).cells();
         var imperative = rows.row(7).cells();
 
-        var word =  new Verb(
+        return new Verb(
             infinitive(table),
             new Singular(
                 new Present(present.cell(0).text(), present.cell(1).text(), present.cell(2).text()),
@@ -52,10 +53,6 @@ public class VerbParser implements Parser {
             ),
             translation(document, language)
         );
-
-        log.debug("Parsing completed");
-
-        return word;
     }
 
     private String infinitive(Table table) throws Exception {
@@ -79,12 +76,15 @@ public class VerbParser implements Parser {
             return null;
         }
 
-        var translations = element.select("a");
+        var text = element
+            .text()
+            .replaceAll("\\(\\d+\\.\\d+\\) ", ""); // remove enumeration
 
-        if (translations.isEmpty()) {
-            return null;
-        }
+        text = text.substring(text.indexOf(":") + 2); // remove language
 
-        return translations.stream().map(Element::text).distinct().collect(Collectors.joining(", "));
+        return Arrays.stream(text.split(";"))
+            .map(String::trim)
+            .distinct()
+            .collect(Collectors.joining(", "));
     }
 }

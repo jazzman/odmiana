@@ -31,7 +31,7 @@ public record Noun(Mianownik mianownik, Dopelniacz dopelniacz, Celownik celownik
                     plural = "*" + c.plural() + "* 👈";
                 }
 
-                return "*" + c.name().charAt(0) + "*" + " (" + c.question() + "): " + singular + " | " + plural;
+                return "*" + c.name().charAt(0) + "*" + " (" + c.question() + "): " + singular + (!plural.isEmpty() ? " | " + plural : "");
             })
             .collect(Collectors.joining(System.lineSeparator()));
 

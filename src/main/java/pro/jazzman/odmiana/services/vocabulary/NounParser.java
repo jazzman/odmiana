@@ -9,6 +9,7 @@ import pro.jazzman.odmiana.helpers.Language;
 import pro.jazzman.odmiana.services.parsing.Table;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,14 +57,20 @@ public class NounParser implements Parser {
             return null;
         }
 
-        var translations = element.select("a");
+        var text = element
+            .text()
+            .replaceAll("\\(\\d+\\.\\d+\\) ", ""); // remove enumeration
 
-        if (translations.isEmpty()) {
-            return null;
-        }
+        text = text.substring(text.indexOf(":") + 2); // remove language
 
-        return translations.stream()
-            .map(Element::ownText)
+        var delimeter = text.split(";").length > 0 ? ";" : ",";
+
+        return Arrays.stream(text.split(delimeter))
+            .map(String::trim)
+            .map(w -> Arrays.stream(w.split(" "))
+                .filter(e -> e.length() > 1)
+                .collect(Collectors.joining(" "))
+            )
             .distinct()
             .collect(Collectors.joining(", "));
     }

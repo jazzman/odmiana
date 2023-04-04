@@ -59,33 +59,33 @@ public record Verb(String infinitive, Singular singular, Plural plural, String t
         }).toArray();
 
         return header + """
-            __LICZBA POJEDYNCZA__ / __MNOGA__
+            __LICZBA POJEDYNCZA__ | __MNOGA__
             
             ⌛*Czas teraźniejszy*:
             
-            _1 os._ - %s / %s
-            _2 os._ - %s / %s
-            _3 os._ - %s / %s
+            _1 os._ - %s | %s
+            _2 os._ - %s | %s
+            _3 os._ - %s | %s
             
             ⌛*Czas przeszły*:
             
-            🧔_1 os._ - %s / %s
-            🧔‍_2 os._ - %s / %s
-            🧔‍_3 os._ - %s / %s
+            🧔_1 os._ - %s | %s
+            🧔‍_2 os._ - %s | %s
+            🧔‍_3 os._ - %s | %s
             
-            👩_1 os._ - %s / %s
-            👩_2 os._ - %s / %s
-            👩_3 os._ - %s / %s
+            👩_1 os._ - %s | %s
+            👩_2 os._ - %s | %s
+            👩_3 os._ - %s | %s
             
-            🍏_1 os._ - %s / %s
-            🍏_2 os._ - %s / %s
-            🍏_3 os._ - %s / %s
+            🍏_1 os._ - %s | %s
+            🍏_2 os._ - %s | %s
+            🍏_3 os._ - %s | %s
             
             *Tryb rozkazujący*:
             
-            _1 os._ - %s / %s
-            _2 os._ - %s / %s
-            _3 os._ - %s / %s
+            _1 os._ - %s | %s
+            _2 os._ - %s | %s
+            _3 os._ - %s | %s
             
             """.formatted(
             words

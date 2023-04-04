@@ -5,7 +5,7 @@
 Odmiana is an easy-to-use Telegram bot for those who are learning Polish.
 
 It will save you from having to constantly go to different sites to find the right case or conjugation of a word. Simply send it a word and it will return all its forms.
-Currently, the bot only supports verbs, but I plan to add support for other parts of speech in the near future. And later, grammar cheatsheets, and possibly practical exercises to learn this beautiful language.
+Currently, the bot only supports verbs and nouns, but I plan to add support for other parts of speech in the near future. And later, grammar cheatsheets, and possibly practical exercises to learn this beautiful language.
 
 For example, if you send the word: "kocham", you will receive the following:
 

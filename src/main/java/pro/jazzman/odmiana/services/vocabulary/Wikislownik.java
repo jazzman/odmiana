@@ -74,8 +74,13 @@ public class Wikislownik {
                 continue;
             }
 
-            if (category.asText().contains("czasowniki")) {
-                return new VerbParser();
+            for (var partOfSpeech : PartOfSpeech.values()) {
+                if (category.asText().contains(partOfSpeech.getInPolish())) {
+                    return switch (partOfSpeech) {
+                        case VERB -> new VerbParser();
+                        case NOUN -> new NounParser();
+                    };
+                }
             }
         }
 

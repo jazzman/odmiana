@@ -21,18 +21,15 @@ import pro.jazzman.odmiana.bot.OdmianaBot;
 import pro.jazzman.odmiana.services.HistoryService;
 import pro.jazzman.odmiana.services.vocabulary.SJP;
 import pro.jazzman.odmiana.services.vocabulary.Wikislownik;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockserver.model.HttpRequest.request;
-import static org.mockserver.model.HttpResponse.response;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,9 +42,11 @@ import static org.mockito.Mockito.when;
 @Slf4j
 class DefaultReplyTest {
     private static final int MOCK_SERVER_PORT = 1080;
-    private static final String WORD = "kocham";
-    private static final String BAD_WORD = "ddddddd";
+    private static final String VERB = "kocham";
     private static final String INFINITIVE = "kochać";
+    private static final String BAD_WORD = "ddddddd";
+    private static final String NOUN = "kobiecie";
+    private static final String MIANOWNIK = "kobieta";
     private static final String LANGUAGE = "en";
 
     private DefaultReply reply;
@@ -76,29 +75,53 @@ class DefaultReplyTest {
         user.setLanguageCode(LANGUAGE);
 
         message.setFrom(user);
-        message.setText(WORD);
 
         update = new Update();
         update.setMessage(message);
     }
 
     @Test
-    @DisplayName("Parsed responses from 3rd-parties and sends the correct result")
-    void onMessage(@Mock OdmianaBot bot) {
+    @DisplayName("[Verb] Parsed responses from 3rd-parties and sends the correct result")
+    void onMessageVerb(@Mock OdmianaBot bot) {
+        message.setText(VERB);
+
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
             client // sjp
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(WORD, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/200.html")));
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(VERB, StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/verb.200.html")));
 
             client // wikislownik
                 .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(INFINITIVE, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/200.html")));
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/verb.200.html")));
 
             reply.onMessage(bot, update);
 
-            verify(bot).send(readFile("telegram/responses/success.txt"), update);
+            verify(bot).send(readFile("telegram/responses/verb.success.txt"), update);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to run integration test with mocks", e);
+        }
+    }
+
+    @Test
+    @DisplayName("[Noun] Parsed responses from 3rd-parties and sends the correct result")
+    void onMessageNoun(@Mock OdmianaBot bot) {
+        message.setText(NOUN);
+        try (
+            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
+        ) {
+            client // sjp
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(NOUN, StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/noun.200.html")));
+
+            client // wikislownik
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(MIANOWNIK, StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/noun.200.html")));
+
+            reply.onMessage(bot, update);
+
+            verify(bot).send(readFile("telegram/responses/noun.success.txt"), update);
         } catch (Exception e) {
             throw new RuntimeException("Unable to run integration test with mocks", e);
         }
@@ -107,6 +130,7 @@ class DefaultReplyTest {
     @Test
     @DisplayName("Sends an error if the word is not found")
     void onMessageNotFoundSendError(@Mock OdmianaBot bot) {
+        message.setText(BAD_WORD);
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
@@ -128,11 +152,12 @@ class DefaultReplyTest {
     @Test
     @DisplayName("Sends an error if SJP returned 200 but no word HTML")
     void onMessageNotFoundInHTMLSendError(@Mock OdmianaBot bot) {
+        message.setText(VERB);
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(WORD, StandardCharsets.UTF_8)), Times.exactly(1))
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(VERB, StandardCharsets.UTF_8)), Times.exactly(1))
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody("<html></html>"));
 
             reply.onMessage(bot, update);
@@ -146,11 +171,12 @@ class DefaultReplyTest {
     @Test
     @DisplayName("Sends an error if an error occurred while parsed SJP")
     void onMessageErrorOccurredWhileRequestingSJPSendError(@Mock OdmianaBot bot) {
+        message.setText(VERB);
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(WORD, StandardCharsets.UTF_8)), Times.exactly(1))
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(VERB, StandardCharsets.UTF_8)), Times.exactly(1))
                 .respond(response().withStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value()).withBody("<html></html>"));
 
             reply.onMessage(bot, update);
@@ -164,7 +190,8 @@ class DefaultReplyTest {
     @Test
     @DisplayName("Sends an error if exception was thrown")
     void onMessageExceptionSendError(@Mock OdmianaBot bot, @Mock Wikislownik wikislownik, @Mock SJP sjp) throws Exception {
-        when(sjp.get(anyString())).thenThrow(Exception.class);
+        message.setText(VERB);
+        when(sjp.get(anyString())).thenThrow(new Exception("Test Error!"));
         new DefaultReply(wikislownik, sjp, historyService).onMessage(bot, update);
 
         verify(bot).send(readFile("telegram/responses/error.txt"), update);

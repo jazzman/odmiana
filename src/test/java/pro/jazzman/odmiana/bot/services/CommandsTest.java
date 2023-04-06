@@ -11,23 +11,26 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.jazzman.odmiana.bot.OdmianaBot;
+import pro.jazzman.odmiana.bot.commands.ContactsCommand;
 import pro.jazzman.odmiana.bot.commands.StartCommand;
+import pro.jazzman.odmiana.bot.interfaces.Command;
 import pro.jazzman.odmiana.bot.replies.DefaultReply;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Commands")
 class CommandsTest {
     private Commands commands;
 
-    @Mock DefaultReply defaultReply;
+    @Mock private DefaultReply defaultReply;
 
     @BeforeEach
     void init() {
-        commands = new Commands();
+        commands = new Commands(new Command1(), new Command2());
 
         ReflectionTestUtils.setField(commands, "defaultReply", defaultReply);
     }
@@ -36,15 +39,15 @@ class CommandsTest {
     @DisplayName("List of BotCommands")
     void asBotCommands() {
         assertThat(commands.asBotCommands()).containsExactly(
-            new BotCommand("/start", "Launch the bot"),
-            new BotCommand("/contacts", "Get in touch")
+            new BotCommand("/command1", "Sample command 1"),
+            new BotCommand("/command2", "Sample command 2")
         );
     }
 
     @Test
     @DisplayName("Checks if string is a command")
     void isCommand() {
-        assertThat(commands.isCommand("/start")).isTrue();
+        assertThat(commands.isCommand("/command1")).isTrue();
     }
 
     @Test
@@ -56,7 +59,7 @@ class CommandsTest {
     @Test
     @DisplayName("Returns a command by name")
     void getBy() {
-        assertThat(commands.getBy("/start")).isExactlyInstanceOf(StartCommand.class);
+        assertThat(commands.getBy("/command1")).isExactlyInstanceOf(Command1.class);
     }
 
     @Test
@@ -71,5 +74,47 @@ class CommandsTest {
         commands.onReply(bot, update);
 
         verify(defaultReply).onMessage(bot, update);
+    }
+
+    private static class Command1 implements Command {
+        @Override
+        public String getCommand() {
+            return "/command1";
+        }
+
+        @Override
+        public String getUsage() {
+            return "/command1";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Sample command 1";
+        }
+
+        @Override
+        public void handle(OdmianaBot bot, Update update) {
+        }
+    }
+
+    private static class Command2 implements Command {
+        @Override
+        public String getCommand() {
+            return "/command2";
+        }
+
+        @Override
+        public String getUsage() {
+            return "/command2";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Sample command 2";
+        }
+
+        @Override
+        public void handle(OdmianaBot bot, Update update) {
+        }
     }
 }

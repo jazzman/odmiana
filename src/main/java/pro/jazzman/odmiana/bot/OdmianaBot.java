@@ -1,7 +1,7 @@
 package pro.jazzman.odmiana.bot;
 
-import com.github.unafraid.telegrambot.bots.AbstractTelegramBot;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -22,14 +22,13 @@ public class OdmianaBot implements LongPollingBot {
     private final TelegramLongPollingBot bot;
     private final Commands commands;
 
+    @Autowired
     public OdmianaBot(TelegramLongPollingBot bot, Commands commands) throws TelegramApiException {
         this.bot = bot;
         this.commands = commands;
-
-        setMyCommands();
     }
 
-    private void setMyCommands() throws TelegramApiException {
+    public void setMyCommands() throws TelegramApiException {
         bot.execute(
             new SetMyCommands(commands.asBotCommands(), new BotCommandScopeDefault(), "en")
         );

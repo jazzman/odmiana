@@ -3,7 +3,6 @@ package pro.jazzman.odmiana.services.elements;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.util.Objects;
 
 @Slf4j

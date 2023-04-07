@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -45,6 +46,14 @@ class OdmianaBotTest {
         message.setFrom(user);
         message.setChat(chat);
         update.setMessage(message);
+    }
+
+    @Test
+    @DisplayName("SetMyCommands message is being sent")
+    void setMyCommands() throws TelegramApiException {
+        odmianaBot.setMyCommands();
+
+        verify(bot).execute(any(SetMyCommands.class));
     }
 
     @Test

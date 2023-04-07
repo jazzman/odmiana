@@ -1,44 +1,25 @@
 package pro.jazzman.odmiana.entities.nouns;
 
 import pro.jazzman.odmiana.entities.Word;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import pro.jazzman.odmiana.views.NounView;
 
 public record Noun(Mianownik mianownik, Dopelniacz dopelniacz, Celownik celownik, Biernik biernik, Narzednik narzednik, Miejscownik miejscownik, Wolacz wolacz, String translation) implements Word {
 
     @Override
     public String text(String highlighted) {
-        var header = """
-            *%s*%s
-            
-            """.formatted(
-            mianownik.singular(),
-            translation != null ? " - " + translation : ""
-        );
+        return new NounView().render(this, highlighted);
+    }
 
-        var words = Stream.of(
-                mianownik, dopelniacz, celownik, biernik, narzednik, miejscownik, wolacz
-            )
-            .map(c -> {
-                var singular = c.singular();
-                var plural = c.plural();
+    public boolean hasSingular() {
+        return mianownik.singular != null;
+    }
 
-                if (highlighted.toLowerCase().equals(c.singular())) {
-                    singular = "*" + c.singular() + "* 👈";
-                }
+    public boolean hasPlural() {
+        return mianownik.plural != null;
+    }
 
-                if (highlighted.toLowerCase().equals(c.plural())) {
-                    plural = "*" + c.plural() + "* 👈";
-                }
-
-                return "*" + c.name().charAt(0) + "*" + " (" + c.question() + "): " + singular + (!plural.isEmpty() ? " | " + plural : "");
-            })
-            .collect(Collectors.joining(System.lineSeparator()));
-
-        return header + """
-            __LICZBA POJEDYNCZA__ | __MNOGA__
-            
-            %s""".formatted(words);
+    public boolean hasTranslation() {
+        return translation != null;
     }
 
     public record Mianownik(String singular, String plural) implements Case {

@@ -1,4 +1,4 @@
-package pro.jazzman.odmiana.services.vocabulary;
+package pro.jazzman.odmiana.services.parsers;
 
 import org.jsoup.nodes.Document;
 import pro.jazzman.odmiana.entities.Word;

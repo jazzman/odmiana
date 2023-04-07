@@ -128,6 +128,52 @@ class DefaultReplyTest {
     }
 
     @Test
+    @DisplayName("[Noun] Returns the result for nouns with singular form only")
+    void onMessageNounSingular(@Mock OdmianaBot bot) {
+        message.setText("tlenem");
+        try (
+            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
+        ) {
+            client // sjp
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/tlenem"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/noun.singular.200.html")));
+
+            client // wikislownik
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode("tlen", StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/noun.singular.200.html")));
+
+            reply.onMessage(bot, update);
+
+            verify(bot).send(readFile("telegram/responses/noun.singular.success.txt"), update);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to run integration test with mocks", e);
+        }
+    }
+
+    @Test
+    @DisplayName("[Noun] Returns the result for nouns with plural form only")
+    void onMessageNounPlural(@Mock OdmianaBot bot) {
+        message.setText("drzwiom");
+        try (
+            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
+        ) {
+            client // sjp
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode("drzwiom", StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/noun.plural.200.html")));
+
+            client // wikislownik
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode("drzwi", StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/noun.plural.200.html")));
+
+            reply.onMessage(bot, update);
+
+            verify(bot).send(readFile("telegram/responses/noun.plural.success.txt"), update);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to run integration test with mocks", e);
+        }
+    }
+
+    @Test
     @DisplayName("Sends an error if the word is not found")
     void onMessageNotFoundSendError(@Mock OdmianaBot bot) {
         message.setText(BAD_WORD);

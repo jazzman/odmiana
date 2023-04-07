@@ -42,7 +42,7 @@ public class DefaultReply {
             return wikislownik
                 .get(word, lang)
                 .orElseThrow(() -> new NotFoundException(word))
-                .text(text);
+                .text(text.toLowerCase());
 
         } catch (NotFoundException e) {
             log.info(e.getMessage());

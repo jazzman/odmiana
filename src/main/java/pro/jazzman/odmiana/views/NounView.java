@@ -5,7 +5,8 @@ import pro.jazzman.odmiana.entities.nouns.Noun;
 import java.util.HashMap;
 
 public class NounView {
-    private final String template = """
+    private static final String MIANOWNIK = "mianownik";
+    private static final String template = """
         *${mianownik}*${translation}
             
         *Liczba Pojedyncza* | *Mnoga*
@@ -19,7 +20,7 @@ public class NounView {
         *W* (O!): ${wolacz.singular} | ${wolacz.plural}
         """;
 
-    private final String templateForSingular = """
+    private static final String templateForSingular = """
         *${mianownik}*${translation}
             
         *Liczba Pojedyncza*
@@ -33,7 +34,7 @@ public class NounView {
         *W* (O!): ${wolacz.singular}
         """;
 
-    private final String templateForPlural = """
+    private static final String templateForPlural = """
         *${mianownik}*${translation}
             
         *Liczba Mnoga*
@@ -48,50 +49,43 @@ public class NounView {
         """;
 
     public String render(Noun noun, String higlighted) {
-        var placeholders = new HashMap<String, String>() {{
-            put("translation", noun.hasTranslation() ? " - " + noun.translation() : "");
-        }};
+        var placeholders = new HashMap<String, String>();
+        placeholders.put("translation", noun.hasTranslation() ? " - " + noun.translation() : "");
 
         if (noun.hasSingular()) {
-            placeholders.putAll(new HashMap<>() {{
-                put("mianownik.singular", noun.mianownik().singular());
-                put("dopelniacz.singular", noun.dopelniacz().singular());
-                put("celownik.singular", noun.celownik().singular());
-                put("biernik.singular", noun.biernik().singular());
-                put("narzednik.singular", noun.narzednik().singular());
-                put("miejscownik.singular", noun.miejscownik().singular());
-                put("wolacz.singular", noun.wolacz().singular());
-            }});
+            placeholders.put("mianownik.singular", noun.mianownik().singular());
+            placeholders.put("dopelniacz.singular", noun.dopelniacz().singular());
+            placeholders.put("celownik.singular", noun.celownik().singular());
+            placeholders.put("biernik.singular", noun.biernik().singular());
+            placeholders.put("narzednik.singular", noun.narzednik().singular());
+            placeholders.put("miejscownik.singular", noun.miejscownik().singular());
+            placeholders.put("wolacz.singular", noun.wolacz().singular());
         }
 
         if (noun.hasPlural()) {
-            placeholders.putAll(new HashMap<>() {{
-                put("mianownik.plural", noun.mianownik().plural());
-                put("dopelniacz.plural", noun.dopelniacz().plural());
-                put("celownik.plural", noun.celownik().plural());
-                put("biernik.plural", noun.biernik().plural());
-                put("narzednik.plural", noun.narzednik().plural());
-                put("miejscownik.plural", noun.miejscownik().plural());
-                put("wolacz.plural", noun.wolacz().plural());
-            }});
+            placeholders.put("mianownik.plural", noun.mianownik().plural());
+            placeholders.put("dopelniacz.plural", noun.dopelniacz().plural());
+            placeholders.put("celownik.plural", noun.celownik().plural());
+            placeholders.put("biernik.plural", noun.biernik().plural());
+            placeholders.put("narzednik.plural", noun.narzednik().plural());
+            placeholders.put("miejscownik.plural", noun.miejscownik().plural());
+            placeholders.put("wolacz.plural", noun.wolacz().plural());
         }
 
         placeholders.replaceAll((k, v) -> v.equals(higlighted) ? "*" + v + "* 👈" : v);
 
-        if (noun.hasSingular() && noun.hasPlural()) {
-            placeholders.put("mianownik", noun.mianownik().singular());
+        placeholders.put(MIANOWNIK, noun.mianownik().singular());
 
+        if (noun.hasSingular() && noun.hasPlural()) {
             return StringSubstitutor.replace(template, placeholders);
         }
 
         if (noun.hasSingular()) {
-            placeholders.put("mianownik", noun.mianownik().singular());
-
             return StringSubstitutor.replace(templateForSingular, placeholders);
         }
 
         if (noun.hasPlural()) {
-            placeholders.put("mianownik", noun.mianownik().plural());
+            placeholders.put(MIANOWNIK, noun.mianownik().plural());
 
             return StringSubstitutor.replace(templateForPlural, placeholders);
         }

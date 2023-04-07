@@ -23,7 +23,7 @@ public class OdmianaBot implements LongPollingBot {
     private final Commands commands;
 
     @Autowired
-    public OdmianaBot(TelegramLongPollingBot bot, Commands commands) throws TelegramApiException {
+    public OdmianaBot(TelegramLongPollingBot bot, Commands commands) {
         this.bot = bot;
         this.commands = commands;
     }

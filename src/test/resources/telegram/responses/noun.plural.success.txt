@@ -1,0 +1,11 @@
+*drzwi* - door, gate, door
+
+*Liczba Mnoga*
+
+*M* (Kto? Co?): drzwi
+*D* (Kogo? Czego?): drzwi
+*C* (Komu? Czemu?): *drzwiom* 👈
+*B* (Kogo? Co?): drzwi
+*N* (Kim? Czym?): drzwiami
+*M* (O kim? O czym?): drzwiach
+*W* (O!): drzwi

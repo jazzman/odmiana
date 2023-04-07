@@ -1,4 +1,4 @@
-package pro.jazzman.odmiana.services.vocabulary;
+package pro.jazzman.odmiana.services.parsers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
@@ -6,8 +6,7 @@ import org.jsoup.nodes.Element;
 import pro.jazzman.odmiana.entities.Word;
 import pro.jazzman.odmiana.entities.verbs.*;
 import pro.jazzman.odmiana.helpers.Language;
-import pro.jazzman.odmiana.services.parsing.Table;
-
+import pro.jazzman.odmiana.services.elements.Table;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;

@@ -1,4 +1,4 @@
-package pro.jazzman.odmiana.services.parsing;
+package pro.jazzman.odmiana.services.elements;
 
 import org.jsoup.select.Elements;
 import java.io.IOException;

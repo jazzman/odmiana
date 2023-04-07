@@ -26,7 +26,7 @@ public class SJP {
             throw new NotFoundException("Unable to find the word '" + word + "' in SJP");
         }
 
-        return infinitive.ownText();
+        return infinitive.text();
     }
 
     private Document document(String url) throws Exception {

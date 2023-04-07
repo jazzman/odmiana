@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pro.jazzman.odmiana.entities.Word;
+import pro.jazzman.odmiana.services.parsers.NounParser;
+import pro.jazzman.odmiana.services.parsers.Parser;
+import pro.jazzman.odmiana.services.parsers.VerbParser;
 
 import java.io.IOException;
 import java.util.Optional;

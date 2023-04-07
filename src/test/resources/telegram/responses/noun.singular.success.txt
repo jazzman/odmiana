@@ -1,0 +1,11 @@
+*tlen* - oxygen
+
+*Liczba Pojedyncza*
+
+*M* (Kto? Co?): tlen
+*D* (Kogo? Czego?): tlenu
+*C* (Komu? Czemu?): tlenowi
+*B* (Kogo? Co?): tlen
+*N* (Kim? Czym?): *tlenem* 👈
+*M* (O kim? O czym?): tlenie
+*W* (O!): tlenie

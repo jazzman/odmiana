@@ -1,6 +1,6 @@
 *kobieta* - woman
 
-__LICZBA POJEDYNCZA__ | __MNOGA__
+*Liczba Pojedyncza* | *Mnoga*
 
 *M* (Kto? Co?): kobieta | kobiety
 *D* (Kogo? Czego?): kobiety | kobiet

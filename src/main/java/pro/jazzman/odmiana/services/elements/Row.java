@@ -1,4 +1,4 @@
-package pro.jazzman.odmiana.services.parsing;
+package pro.jazzman.odmiana.services.elements;
 
 import org.jsoup.nodes.Element;
 
@@ -9,5 +9,9 @@ public class Row {
     }
     public Cells cells() {
         return new Cells(element.select("td"));
+    }
+
+    public Cells headerCells() {
+        return new Cells(element.select("th"));
     }
 }

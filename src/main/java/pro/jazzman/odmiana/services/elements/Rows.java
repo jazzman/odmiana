@@ -10,7 +10,7 @@ public class Rows extends Elements {
         this.elements = elements;
     }
 
-    public Row row(int index) throws Exception {
+    public Row row(int index) throws IOException {
         var element = elements.get(index);
 
         if (element == null) {

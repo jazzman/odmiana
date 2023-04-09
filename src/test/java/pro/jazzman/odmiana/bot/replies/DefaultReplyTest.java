@@ -101,7 +101,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/verb.success.txt"), update);
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 
@@ -124,7 +124,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/noun.success.txt"), update);
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 
@@ -147,7 +147,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/noun.singular.success.txt"), update);
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 
@@ -170,7 +170,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/noun.plural.success.txt"), update);
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 
@@ -192,7 +192,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/not-found.txt"), update);
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 
@@ -211,7 +211,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/not-found.txt"), update);
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 
@@ -230,7 +230,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/error.txt"), update);
         } catch (Exception e) {
-            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException(e);
         }
     }
 

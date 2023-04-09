@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import pro.jazzman.odmiana.entities.partsofspeech.Noun;
+import pro.jazzman.odmiana.services.elements.Cells;
 import pro.jazzman.odmiana.services.elements.Table;
 import java.io.IOException;
 
@@ -12,7 +13,7 @@ import java.io.IOException;
 public class NounParser implements Parser {
     private static final String TABLE_SELECTOR = "table.wikitable.odmiana";
     @Override
-    public Word parse(Document document) throws Exception {
+    public Word parse(Document document) throws IOException {
         Element element = document.selectFirst(TABLE_SELECTOR);
 
         if (element == null) {
@@ -21,7 +22,7 @@ public class NounParser implements Parser {
 
         var table = Table.from(element);
         var rows = table.rows();
-        var header = rows.row(0).headerCells();
+        Cells header = rows.row(0).headerCells();
 
         var mianownik = rows.row(1).cells();
         var dopelniacz = rows.row(2).cells();
@@ -33,34 +34,34 @@ public class NounParser implements Parser {
 
         Noun noun = new Noun();
 
-        if (header.cell(1) != null && "liczba pojedyncza".equals(header.cell(1).text())) {
-            noun.setMianownikSingular(mianownik.cell(1) != null ? mianownik.cell(1).text() : "");
-            noun.setDopelniaczSingular(dopelniacz.cell(1) != null ? dopelniacz.cell(1).text() : "");
-            noun.setCelownikSingular(celownik.cell(1) != null ? celownik.cell(1).text() : "");
-            noun.setBiernikSingular(biernik.cell(1) != null ? biernik.cell(1).text() : "");
-            noun.setNarzednikSingular(narzednik.cell(1) != null ? narzednik.cell(1).text() : "");
-            noun.setMiejscownikSingular(miejscownik.cell(1) != null ? miejscownik.cell(1).text() : "");
-            noun.setWolaczSingular(wolacz.cell(1) != null ? wolacz.cell(1).text() : "");
+        if ("liczba pojedyncza".equals(header.textInCell(1))) {
+            noun.setMianownikSingular(mianownik.textInCell(1));
+            noun.setDopelniaczSingular(dopelniacz.textInCell(1));
+            noun.setCelownikSingular(celownik.textInCell(1));
+            noun.setBiernikSingular(biernik.textInCell(1));
+            noun.setNarzednikSingular(narzednik.textInCell(1));
+            noun.setMiejscownikSingular(miejscownik.textInCell(1));
+            noun.setWolaczSingular(wolacz.textInCell(1));
 
-            if (header.cell(2) != null && "liczba mnoga".equals(header.cell(2).text())) {
-                noun.setMianownikPlural(mianownik.cell(2) != null ? mianownik.cell(2).text() : "");
-                noun.setDopelniaczPlural(dopelniacz.cell(2) != null ? dopelniacz.cell(2).text() : "");
-                noun.setCelownikPlural(celownik.cell(2) != null ? celownik.cell(2).text() : "");
-                noun.setBiernikPlural(biernik.cell(2) != null ? biernik.cell(2).text() : "");
-                noun.setNarzednikPlural(narzednik.cell(2) != null ? narzednik.cell(2).text() : "");
-                noun.setMiejscownikPlural(miejscownik.cell(2) != null ? miejscownik.cell(2).text() : "");
-                noun.setWolaczPlural(wolacz.cell(2) != null ? wolacz.cell(2).text() : "");
+            if ("liczba mnoga".equals(header.textInCell(2))) {
+                noun.setMianownikPlural(mianownik.textInCell(2));
+                noun.setDopelniaczPlural(dopelniacz.textInCell(2));
+                noun.setCelownikPlural(celownik.textInCell(2));
+                noun.setBiernikPlural(biernik.textInCell(2));
+                noun.setNarzednikPlural(narzednik.textInCell(2));
+                noun.setMiejscownikPlural(miejscownik.textInCell(2));
+                noun.setWolaczPlural(wolacz.textInCell(2));
             }
         }
 
-        if (header.cell(1) != null && "liczba mnoga".equals(header.cell(1).text())) {
-            noun.setMianownikPlural(mianownik.cell(1) != null ? mianownik.cell(1).text() : "");
-            noun.setDopelniaczPlural(dopelniacz.cell(1) != null ? dopelniacz.cell(1).text() : "");
-            noun.setCelownikPlural(celownik.cell(1) != null ? celownik.cell(1).text() : "");
-            noun.setBiernikPlural(biernik.cell(1) != null ? biernik.cell(1).text() : "");
-            noun.setNarzednikPlural(narzednik.cell(1) != null ? narzednik.cell(1).text() : "");
-            noun.setMiejscownikPlural(miejscownik.cell(1) != null ? miejscownik.cell(1).text() : "");
-            noun.setWolaczPlural(wolacz.cell(1) != null ? wolacz.cell(1).text() : "");
+        if ("liczba mnoga".equals(header.textInCell(1))) {
+            noun.setMianownikPlural(mianownik.textInCell(1));
+            noun.setDopelniaczPlural(dopelniacz.textInCell(1));
+            noun.setCelownikPlural(celownik.textInCell(1));
+            noun.setBiernikPlural(biernik.textInCell(1));
+            noun.setNarzednikPlural(narzednik.textInCell(1));
+            noun.setMiejscownikPlural(miejscownik.textInCell(1));
+            noun.setWolaczPlural(wolacz.textInCell(1));
         }
 
         return noun;

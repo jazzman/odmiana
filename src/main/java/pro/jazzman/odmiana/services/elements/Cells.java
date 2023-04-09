@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.Objects;
+
 @Slf4j
 public class Cells extends Elements {
     private final Elements elements;
@@ -18,5 +20,31 @@ public class Cells extends Elements {
         }
 
         return null;
+    }
+
+    public String textInCell(int index) {
+        Element cell = cell(index);
+
+        if (cell == null) {
+            return "";
+        }
+
+        return cell.text();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cells elements1)) return false;
+        if (!super.equals(o)) return false;
+
+        return Objects.equals(elements, elements1.elements);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (elements != null ? elements.hashCode() : 0);
+        return result;
     }
 }

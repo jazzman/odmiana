@@ -13,7 +13,7 @@ import java.io.IOException;
 public class VerbParser implements Parser {
     private static final String TABLE_SELECTOR = "table.wikitable";
 
-    public Word parse(Document document) throws Exception {
+    public Word parse(Document document) throws IOException {
         Element element = document.selectFirst(TABLE_SELECTOR);
 
         if (element == null) {
@@ -32,42 +32,42 @@ public class VerbParser implements Parser {
         Verb verb = new Verb();
         verb.setInfinitive(infinitive(table));
 
-        verb.setSingularPresent1(present.cell(0) != null ? present.cell(0).text() : "");
-        verb.setSingularPresent2(present.cell(1) != null ? present.cell(1).text() : "");
-        verb.setSingularPresent3(present.cell(2) != null ? present.cell(2).text() : "");
-        verb.setSingularPastMale1(pastM.cell(0) != null ? pastM.cell(0).text() : "");
-        verb.setSingularPastMale2(pastM.cell(1) != null ? pastM.cell(1).text() : "");
-        verb.setSingularPastMale3(pastM.cell(2) != null ? pastM.cell(2).text() : "");
-        verb.setSingularPastFemale1(pastF.cell(0) != null ? pastF.cell(0).text() : "");
-        verb.setSingularPastFemale2(pastF.cell(1) != null ? pastF.cell(1).text() : "");
-        verb.setSingularPastFemale3(pastF.cell(2) != null ? pastF.cell(2).text() : "");
-        verb.setSingularPastNeutral1(pastN.cell(0) != null ? pastN.cell(0).text() : "");
-        verb.setSingularPastNeutral2(pastN.cell(1) != null ? pastN.cell(1).text() : "");
-        verb.setSingularPastNeutral3(pastN.cell(2) != null ? pastN.cell(2).text() : "");
-        verb.setSingularImperative1(imperative.cell(0) != null ? imperative.cell(0).text() : "");
-        verb.setSingularImperative2(imperative.cell(1) != null ? imperative.cell(1).text() : "");
-        verb.setSingularImperative3(imperative.cell(2) != null ? imperative.cell(2).text() : "");
+        verb.setSingularPresent1(present.textInCell(0));
+        verb.setSingularPresent2(present.textInCell(1));
+        verb.setSingularPresent3(present.textInCell(2));
+        verb.setSingularPastMale1(pastM.textInCell(0));
+        verb.setSingularPastMale2(pastM.textInCell(1));
+        verb.setSingularPastMale3(pastM.textInCell(2));
+        verb.setSingularPastFemale1(pastF.textInCell(0));
+        verb.setSingularPastFemale2(pastF.textInCell(1));
+        verb.setSingularPastFemale3(pastF.textInCell(2));
+        verb.setSingularPastNeutral1(pastN.textInCell(0));
+        verb.setSingularPastNeutral2(pastN.textInCell(1));
+        verb.setSingularPastNeutral3(pastN.textInCell(2));
+        verb.setSingularImperative1(imperative.textInCell(0));
+        verb.setSingularImperative2(imperative.textInCell(1));
+        verb.setSingularImperative3(imperative.textInCell(2));
 
-        verb.setPluralPresent1(present.cell(3) != null ? present.cell(3).text() : "");
-        verb.setPluralPresent2(present.cell(4) != null ? present.cell(4).text() : "");
-        verb.setPluralPresent3(present.cell(5) != null ? present.cell(5).text() : "");
-        verb.setPluralPastMale1(pastM.cell(3) != null ? pastM.cell(3).text() : "");
-        verb.setPluralPastMale2(pastM.cell(4) != null ? pastM.cell(4).text() : "");
-        verb.setPluralPastMale3(pastM.cell(5) != null ? pastM.cell(5).text() : "");
-        verb.setPluralPastFemale1(pastF.cell(3) != null ? pastF.cell(3).text() : "");
-        verb.setPluralPastFemale2(pastF.cell(4) != null ? pastF.cell(4).text() : "");
-        verb.setPluralPastFemale3(pastF.cell(5) != null ? pastF.cell(5).text() : "");
-        verb.setPluralPastNeutral1(pastF.cell(3) != null ? pastF.cell(3).text() : "");
-        verb.setPluralPastNeutral2(pastF.cell(4) != null ? pastF.cell(4).text() : "");
-        verb.setPluralPastNeutral3(pastF.cell(5) != null ? pastF.cell(5).text() : "");
-        verb.setPluralImperative1(imperative.cell(3) != null ? imperative.cell(3).text() : "");
-        verb.setPluralImperative2(imperative.cell(4) != null ? imperative.cell(4).text() : "");
-        verb.setPluralImperative3(imperative.cell(5) != null ? imperative.cell(5).text() : "");
+        verb.setPluralPresent1(present.textInCell(3));
+        verb.setPluralPresent2(present.textInCell(4));
+        verb.setPluralPresent3(present.textInCell(5));
+        verb.setPluralPastMale1(pastM.textInCell(3));
+        verb.setPluralPastMale2(pastM.textInCell(4));
+        verb.setPluralPastMale3(pastM.textInCell(5));
+        verb.setPluralPastFemale1(pastF.textInCell(3));
+        verb.setPluralPastFemale2(pastF.textInCell(4));
+        verb.setPluralPastFemale3(pastF.textInCell(5));
+        verb.setPluralPastNeutral1(pastF.textInCell(3));
+        verb.setPluralPastNeutral2(pastF.textInCell(4));
+        verb.setPluralPastNeutral3(pastF.textInCell(5));
+        verb.setPluralImperative1(imperative.textInCell(3));
+        verb.setPluralImperative2(imperative.textInCell(4));
+        verb.setPluralImperative3(imperative.textInCell(5));
 
         return verb;
     }
 
-    private String infinitive(Table table) throws Exception {
+    private String infinitive(Table table) throws NotFoundException, IOException {
         var infinitive = table.rows().row(2).cells().cell(0).selectFirst("b");
 
         if (infinitive == null) {

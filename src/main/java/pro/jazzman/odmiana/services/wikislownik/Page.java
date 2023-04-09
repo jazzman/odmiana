@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
-import pro.jazzman.odmiana.ApplicationRuntimeException;
+import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.parsers.NounParser;
 import pro.jazzman.odmiana.parsers.Parser;
 import pro.jazzman.odmiana.parsers.VerbParser;

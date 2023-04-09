@@ -1,4 +1,4 @@
-package pro.jazzman.odmiana;
+package pro.jazzman.odmiana.exceptions;
 
 public class ApplicationRuntimeException extends RuntimeException {
     public ApplicationRuntimeException(String message) {

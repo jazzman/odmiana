@@ -27,11 +27,6 @@ public class Noun implements Word {
         return new NounView(this).render(highlighted);
     }
 
-    @Override
-    public void addTranslation(String translation) {
-        this.translation = translation;
-    }
-
     public boolean hasSingular() {
         return mianownikSingular != null && !mianownikSingular.isEmpty();
     }

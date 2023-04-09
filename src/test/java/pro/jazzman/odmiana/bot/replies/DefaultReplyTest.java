@@ -17,7 +17,7 @@ import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import pro.jazzman.odmiana.ApplicationRuntimeException;
+import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.bot.OdmianaBot;
 import pro.jazzman.odmiana.services.HistoryService;
 import pro.jazzman.odmiana.services.vocabulary.SJP;

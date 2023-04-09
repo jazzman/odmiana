@@ -45,11 +45,6 @@ public class Verb implements Word {
     }
 
     @Override
-    public void addTranslation(String translation) {
-        this.translation = translation;
-    }
-
-    @Override
     public boolean hasTranslation() {
         return translation != null;
     }

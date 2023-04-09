@@ -2,7 +2,7 @@ package pro.jazzman.odmiana.bot.messages;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.text.StringSubstitutor;
-import pro.jazzman.odmiana.ApplicationRuntimeException;
+import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.entities.partsofspeech.Noun;
 import java.util.HashMap;
 

@@ -17,6 +17,7 @@ import org.testcontainers.containers.MockServerContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+import pro.jazzman.odmiana.ApplicationRuntimeException;
 import pro.jazzman.odmiana.bot.OdmianaBot;
 import pro.jazzman.odmiana.services.HistoryService;
 import pro.jazzman.odmiana.services.vocabulary.SJP;
@@ -100,7 +101,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/verb.success.txt"), update);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
         }
     }
 
@@ -123,7 +124,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/noun.success.txt"), update);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
         }
     }
 
@@ -146,7 +147,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/noun.singular.success.txt"), update);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
         }
     }
 
@@ -169,7 +170,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/noun.plural.success.txt"), update);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
         }
     }
 
@@ -191,7 +192,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/not-found.txt"), update);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
         }
     }
 
@@ -210,7 +211,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/not-found.txt"), update);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
         }
     }
 
@@ -229,7 +230,7 @@ class DefaultReplyTest {
 
             verify(bot).send(readFile("telegram/responses/error.txt"), update);
         } catch (Exception e) {
-            throw new RuntimeException("Unable to run integration test with mocks", e);
+            throw new ApplicationRuntimeException("Unable to run integration test with mocks", e);
         }
     }
 
@@ -237,7 +238,7 @@ class DefaultReplyTest {
     @DisplayName("Sends an error if exception was thrown")
     void onMessageExceptionSendError(@Mock OdmianaBot bot, @Mock Wikislownik wikislownik, @Mock SJP sjp) throws Exception {
         message.setText(VERB);
-        when(sjp.get(anyString())).thenThrow(new Exception("Test Error!"));
+        when(sjp.get(anyString())).thenThrow(new ApplicationRuntimeException("Test Error!"));
         new DefaultReply(wikislownik, sjp, historyService).onMessage(bot, update);
 
         verify(bot).send(readFile("telegram/responses/error.txt"), update);

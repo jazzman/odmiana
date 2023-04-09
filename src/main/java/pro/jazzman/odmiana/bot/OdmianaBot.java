@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.generics.BotOptions;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
+import pro.jazzman.odmiana.ApplicationRuntimeException;
 import pro.jazzman.odmiana.bot.services.Commands;
 
 import java.util.*;
@@ -69,7 +70,7 @@ public class OdmianaBot implements LongPollingBot {
                 }
 
             } catch (TelegramApiException e) {
-                throw new RuntimeException(e);
+                throw new ApplicationRuntimeException(e);
             }
 
             log.debug("Sent result for '{}' [user: {}, update: {}]", text, update.getMessage().getFrom().getId(), update.getUpdateId());

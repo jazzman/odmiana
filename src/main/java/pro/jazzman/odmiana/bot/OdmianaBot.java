@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.generics.BotOptions;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
-import pro.jazzman.odmiana.ApplicationRuntimeException;
+import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.bot.services.Commands;
 
 import java.util.*;

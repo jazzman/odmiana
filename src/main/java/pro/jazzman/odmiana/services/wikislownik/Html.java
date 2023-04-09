@@ -3,7 +3,7 @@ package pro.jazzman.odmiana.services.wikislownik;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import pro.jazzman.odmiana.ApplicationRuntimeException;
+import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import pro.jazzman.odmiana.helpers.Language;
 import pro.jazzman.odmiana.parsers.Parser;
@@ -29,7 +29,7 @@ public class Html {
             throw new ApplicationRuntimeException("Unable to parse the html");
         }
 
-        word.addTranslation(translation(lang));
+        word.setTranslation(translation(lang));
 
         return word;
     }
@@ -53,7 +53,8 @@ public class Html {
             .map(e -> e.split(","))
             .flatMap(Stream::of)
             .map(String::trim)
-            .map(e -> e.replaceAll("\\s+[żmwn]$", "")) // remove kind
+            .map(e -> e.replaceAll("\\s[żmwn]$", "")) // remove kind
+            .map(String::trim)
             .distinct()
             .collect(Collectors.joining(", "));
     }

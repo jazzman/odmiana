@@ -1,12 +1,15 @@
-package pro.jazzman.odmiana.views;
+package pro.jazzman.odmiana.bot.messages;
 
+import lombok.AllArgsConstructor;
 import org.apache.commons.text.StringSubstitutor;
-import pro.jazzman.odmiana.entities.nouns.Noun;
+import pro.jazzman.odmiana.ApplicationRuntimeException;
+import pro.jazzman.odmiana.entities.partsofspeech.Noun;
 import java.util.HashMap;
 
-public class NounView {
+@AllArgsConstructor
+public class NounView implements View {
     private static final String MIANOWNIK = "mianownik";
-    private static final String template = """
+    private static final String TEMPLATE = """
         *${mianownik}*${translation}
             
         *Liczba Pojedyncza* | *Mnoga*
@@ -48,36 +51,38 @@ public class NounView {
         *W* (O!): ${wolacz.plural}
         """;
 
-    public String render(Noun noun, String higlighted) {
+    private final Noun noun;
+
+    public String render(String higlighted) {
         var placeholders = new HashMap<String, String>();
-        placeholders.put("translation", noun.hasTranslation() ? " - " + noun.translation() : "");
+        placeholders.put("translation", noun.hasTranslation() ? " - " + noun.getTranslation() : "");
 
         if (noun.hasSingular()) {
-            placeholders.put("mianownik.singular", noun.mianownik().singular());
-            placeholders.put("dopelniacz.singular", noun.dopelniacz().singular());
-            placeholders.put("celownik.singular", noun.celownik().singular());
-            placeholders.put("biernik.singular", noun.biernik().singular());
-            placeholders.put("narzednik.singular", noun.narzednik().singular());
-            placeholders.put("miejscownik.singular", noun.miejscownik().singular());
-            placeholders.put("wolacz.singular", noun.wolacz().singular());
+            placeholders.put("mianownik.singular", noun.getMianownikSingular());
+            placeholders.put("dopelniacz.singular", noun.getDopelniaczSingular());
+            placeholders.put("celownik.singular", noun.getCelownikSingular());
+            placeholders.put("biernik.singular", noun.getBiernikSingular());
+            placeholders.put("narzednik.singular", noun.getNarzednikSingular());
+            placeholders.put("miejscownik.singular", noun.getMiejscownikSingular());
+            placeholders.put("wolacz.singular", noun.getWolaczSingular());
         }
 
         if (noun.hasPlural()) {
-            placeholders.put("mianownik.plural", noun.mianownik().plural());
-            placeholders.put("dopelniacz.plural", noun.dopelniacz().plural());
-            placeholders.put("celownik.plural", noun.celownik().plural());
-            placeholders.put("biernik.plural", noun.biernik().plural());
-            placeholders.put("narzednik.plural", noun.narzednik().plural());
-            placeholders.put("miejscownik.plural", noun.miejscownik().plural());
-            placeholders.put("wolacz.plural", noun.wolacz().plural());
+            placeholders.put("mianownik.plural", noun.getMianownikPlural());
+            placeholders.put("dopelniacz.plural", noun.getDopelniaczPlural());
+            placeholders.put("celownik.plural", noun.getCelownikPlural());
+            placeholders.put("biernik.plural", noun.getBiernikPlural());
+            placeholders.put("narzednik.plural", noun.getNarzednikPlural());
+            placeholders.put("miejscownik.plural", noun.getMiejscownikPlural());
+            placeholders.put("wolacz.plural", noun.getWolaczPlural());
         }
 
         placeholders.replaceAll((k, v) -> v.equals(higlighted) ? "*" + v + "* 👈" : v);
 
-        placeholders.put(MIANOWNIK, noun.mianownik().singular());
+        placeholders.put(MIANOWNIK, noun.getMianownikSingular());
 
         if (noun.hasSingular() && noun.hasPlural()) {
-            return StringSubstitutor.replace(template, placeholders);
+            return StringSubstitutor.replace(TEMPLATE, placeholders);
         }
 
         if (noun.hasSingular()) {
@@ -85,11 +90,11 @@ public class NounView {
         }
 
         if (noun.hasPlural()) {
-            placeholders.put(MIANOWNIK, noun.mianownik().plural());
+            placeholders.put(MIANOWNIK, noun.getMianownikPlural());
 
             return StringSubstitutor.replace(templateForPlural, placeholders);
         }
 
-        throw new RuntimeException("Unable to render a message");
+        throw new ApplicationRuntimeException("Unable to render a message");
     }
 }

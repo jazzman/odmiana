@@ -1,30 +1,29 @@
 *kochać* - love, be in love (with), make love
 
-__LICZBA POJEDYNCZA__ | __MNOGA__
+*Liczba Pojedyncza* | *Mnoga*
 
 ⌛*Czas teraźniejszy*:
 
-_1 os._ - *kocham* 👈 | kochamy
-_2 os._ - kochasz | kochacie
-_3 os._ - kocha | kochają
+1 os. - *kocham* 👈 | kochamy
+2 os. - kochasz | kochacie
+3 os. - kocha | kochają
 
 ⌛*Czas przeszły*:
 
-🧔_1 os._ - kochałem | kochaliśmy
-🧔‍_2 os._ - kochałeś | kochaliście
-🧔‍_3 os._ - kochał | kochali
+🧔1 os. - kochałem | kochaliśmy
+🧔‍2 os. - kochałeś | kochaliście
+🧔‍3 os. - kochał | kochali
 
-👩_1 os._ - kochałam | kochałyśmy
-👩_2 os._ - kochałaś | kochałyście
-👩_3 os._ - kochała | kochały
+👩1 os. - kochałam | kochałyśmy
+👩2 os. - kochałaś | kochałyście
+👩3 os. - kochała | kochały
 
-🍏_1 os._ - kochałom | kochałyśmy
-🍏_2 os._ - kochałoś | kochałyście
-🍏_3 os._ - kochało | kochały
+🍏1 os. - kochałom | kochałyśmy
+🍏2 os. - kochałoś | kochałyście
+🍏3 os. - kochało | kochały
 
 *Tryb rozkazujący*:
 
-_1 os._ - niech kocham | kochajmy
-_2 os._ - kochaj | kochajcie
-_3 os._ - niech kocha | niech kochają
-
+1 os. - niech kocham | kochajmy
+2 os. - kochaj | kochajcie
+3 os. - niech kocha | niech kochają

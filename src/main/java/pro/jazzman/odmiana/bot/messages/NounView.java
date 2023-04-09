@@ -23,7 +23,7 @@ public class NounView implements View {
         *W* (O!): ${wolacz.singular} | ${wolacz.plural}
         """;
 
-    private static final String templateForSingular = """
+    private static final String SINGULAR_TEMPLATE = """
         *${mianownik}*${translation}
             
         *Liczba Pojedyncza*
@@ -37,7 +37,7 @@ public class NounView implements View {
         *W* (O!): ${wolacz.singular}
         """;
 
-    private static final String templateForPlural = """
+    private static final String PLURAL_TEMPLATE = """
         *${mianownik}*${translation}
             
         *Liczba Mnoga*
@@ -86,13 +86,13 @@ public class NounView implements View {
         }
 
         if (noun.hasSingular()) {
-            return StringSubstitutor.replace(templateForSingular, placeholders);
+            return StringSubstitutor.replace(SINGULAR_TEMPLATE, placeholders);
         }
 
         if (noun.hasPlural()) {
             placeholders.put(MIANOWNIK, noun.getMianownikPlural());
 
-            return StringSubstitutor.replace(templateForPlural, placeholders);
+            return StringSubstitutor.replace(PLURAL_TEMPLATE, placeholders);
         }
 
         throw new ApplicationRuntimeException("Unable to render a message");

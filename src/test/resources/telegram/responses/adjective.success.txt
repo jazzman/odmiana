@@ -1,0 +1,59 @@
+*granatowy* - navy blue, navy
+
+*LICZBA POJEDYNCZA*
+
+*Męski* (jaki?) - 🧔🏼Osoby i 🐱zwierzęta
+*M* (Kto? Co?): granatowy
+*D* (Kogo? Czego?): *granatowego* 👈
+*C* (Komu? Czemu?): granatowemu
+*B* (Kogo? Co?): *granatowego* 👈
+*N* (Kim? Czym?): granatowym
+*M* (O kim? O czym?): granatowym
+*W* (O!): granatowy
+
+*Męski* (jaki?) - 🏠Rzeczy
+*M* (Kto? Co?): granatowy
+*D* (Kogo? Czego?): *granatowego* 👈
+*C* (Komu? Czemu?): granatowemu
+*B* (Kogo? Co?): granatowy
+*N* (Kim? Czym?): granatowym
+*M* (O kim? O czym?): granatowym
+*W* (O!): granatowy
+
+*Żeński* (jaka?) 👩🏼
+*M* (Kto? Co?): granatowa
+*D* (Kogo? Czego?): granatowej
+*C* (Komu? Czemu?): granatowej
+*B* (Kogo? Co?): granatową
+*N* (Kim? Czym?): granatową
+*M* (O kim? O czym?): granatowej
+*W* (O!): granatowa
+
+*Nijaki* (jakie?) 🍏
+*M* (Kto? Co?): granatowe
+*D* (Kogo? Czego?): *granatowego* 👈
+*C* (Komu? Czemu?): granatowemu
+*B* (Kogo? Co?): granatowe
+*N* (Kim? Czym?): granatowym
+*M* (O kim? O czym?): granatowym
+*W* (O!): granatowe
+
+*LICZBA MNOGA*
+
+*Męskoosobowy* (jacy?) 🙎🏼‍
+*M* (Kto? Co?): granatowi
+*D* (Kogo? Czego?): granatowych
+*C* (Komu? Czemu?): granatowym
+*B* (Kogo? Co?): granatowych
+*N* (Kim? Czym?): granatowymi
+*M* (O kim? O czym?): granatowych
+*W* (O!): granatowi
+
+*Niemęskoosobowy* (jakie?) 🙅🏼‍
+*M* (Kto? Co?): granatowe
+*D* (Kogo? Czego?): granatowych
+*C* (Komu? Czemu?): granatowym
+*B* (Kogo? Co?): granatowe
+*N* (Kim? Czym?): granatowymi
+*M* (O kim? O czym?): granatowych
+*W* (O!): granatowe

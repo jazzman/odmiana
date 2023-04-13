@@ -47,7 +47,9 @@ class DefaultReplyTest {
     private static final String INFINITIVE = "kochać";
     private static final String BAD_WORD = "ddddddd";
     private static final String NOUN = "kobiecie";
-    private static final String MIANOWNIK = "kobieta";
+    private static final String NOUN_MIANOWNIK = "kobieta";
+    private static final String ADJECTIVE = "granatowego";
+    private static final String ADJECTIVE_MIANOWNIK = "granatowy";
     private static final String LANGUAGE = "en";
 
     private DefaultReply reply;
@@ -117,7 +119,7 @@ class DefaultReplyTest {
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/noun.200.html")));
 
             client // wikislownik
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(MIANOWNIK, StandardCharsets.UTF_8)), Times.exactly(1))
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(NOUN_MIANOWNIK, StandardCharsets.UTF_8)), Times.exactly(1))
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/noun.200.html")));
 
             reply.onMessage(bot, update);
@@ -169,6 +171,29 @@ class DefaultReplyTest {
             reply.onMessage(bot, update);
 
             verify(bot).send(readFile("telegram/responses/noun.plural.success.txt"), update);
+        } catch (Exception e) {
+            throw new ApplicationRuntimeException(e);
+        }
+    }
+
+    @Test
+    @DisplayName("[Adjective] Parsed responses from 3rd-parties and sends the correct result")
+    void onMessageAdjective(@Mock OdmianaBot bot) {
+        message.setText(ADJECTIVE);
+        try (
+            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
+        ) {
+            client // sjp
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(ADJECTIVE, StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/adjective.200.html")));
+
+            client // wikislownik
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(ADJECTIVE_MIANOWNIK, StandardCharsets.UTF_8)), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/adjective.200.html")));
+
+            reply.onMessage(bot, update);
+
+            verify(bot).send(readFile("telegram/responses/adjective.success.txt"), update);
         } catch (Exception e) {
             throw new ApplicationRuntimeException(e);
         }

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
+import pro.jazzman.odmiana.parsers.AdjectiveParser;
 import pro.jazzman.odmiana.parsers.NounParser;
 import pro.jazzman.odmiana.parsers.Parser;
 import pro.jazzman.odmiana.parsers.VerbParser;
@@ -54,6 +55,7 @@ public class Page {
                     return switch (partOfSpeech) {
                         case VERB -> new VerbParser();
                         case NOUN -> new NounParser();
+                        case ADJECTIVE -> new AdjectiveParser();
                     };
                 }
             }

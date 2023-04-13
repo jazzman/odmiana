@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PartOfSpeech {
     VERB("czasowniki"),
-    NOUN("rzeczowniki");
+    NOUN("rzeczowniki"),
+    ADJECTIVE("przymiotniki");
 
     private final String inPolish;
 }

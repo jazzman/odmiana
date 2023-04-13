@@ -21,13 +21,13 @@ public class VerbView implements View {
             
         ⌛*Czas przeszły*:
             
-        🧔1 os. - ${singular.past.male.first} | ${plural.past.male.first}
-        🧔‍2 os. - ${singular.past.male.second} | ${plural.past.male.second}
-        🧔‍3 os. - ${singular.past.male.third} | ${plural.past.male.third}
+        🧔🏼1 os. - ${singular.past.male.first} | ${plural.past.male.first}
+        🧔🏼‍2 os. - ${singular.past.male.second} | ${plural.past.male.second}
+        🧔🏼3 os. - ${singular.past.male.third} | ${plural.past.male.third}
             
-        👩1 os. - ${singular.past.female.first} | ${plural.past.female.first}
-        👩2 os. - ${singular.past.female.second} | ${plural.past.female.second}
-        👩3 os. - ${singular.past.female.third} | ${plural.past.female.third}
+        👩🏼1 os. - ${singular.past.female.first} | ${plural.past.female.first}
+        👩🏼2 os. - ${singular.past.female.second} | ${plural.past.female.second}
+        👩🏼3 os. - ${singular.past.female.third} | ${plural.past.female.third}
             
         🍏1 os. - ${singular.past.neutral.first} | ${plural.past.neutral.first}
         🍏2 os. - ${singular.past.neutral.second} | ${plural.past.neutral.second}

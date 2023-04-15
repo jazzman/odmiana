@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: analysis
     outputs:
-      new_tag: ${{ steps.bump_version.outputs.new_tag}}
+      new_tag: ${{ steps.bump_version.outputs.new_tag }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -87,7 +87,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
   deploy:
     name: Deploying
-    needs: build
+    needs: [version, build]
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to AWS EC2

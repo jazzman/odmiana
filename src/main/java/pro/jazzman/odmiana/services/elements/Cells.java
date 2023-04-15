@@ -10,6 +10,9 @@ import java.util.Objects;
 public class Cells extends Elements {
     private final Elements elements;
 
+    private static final String SANITIZE_PATTERN = "\\[\\d+]|pot.\\s";
+
+
     public Cells(Elements elements) {
         this.elements = elements;
     }
@@ -29,7 +32,7 @@ public class Cells extends Elements {
             return "";
         }
 
-        return cell.text();
+        return cell.text().replaceAll(SANITIZE_PATTERN, "").trim();
     }
 
     @Override

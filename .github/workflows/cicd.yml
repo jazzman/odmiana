@@ -25,6 +25,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
       - name: Run Tests
         uses: ./.github/actions/testing
   analysis:
@@ -33,6 +35,8 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
       - name: Run Analysis
         uses: ./.github/actions/analysis
         with:
@@ -58,6 +62,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -72,7 +78,7 @@ jobs:
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
           image: ${{ secrets.DOCKER_USERNAME }}/odmiana
-          tags: ${{ github.sha }}
+          tags: ${{ needs.version.outputs.new_tag }}
           registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -89,7 +95,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             docker login
-            docker pull ${{ secrets.DOCKER_USERNAME }}/odmiana:${{ github.sha }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/odmiana:${{ needs.version.outputs.new_tag }}
             docker stop odmiana
             docker rm odmiana
-            docker run --detach --name odmiana --network ec2-user_odmiana_network -e MONGO_HOST -e MONGO_USERNAME -e MONGO_PASSWORD -e TELEGRAM_USERNAME -e TELEGRAM_TOKEN -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/odmiana:${{ github.sha }}
+            docker run --detach --name odmiana --network ec2-user_odmiana_network -e MONGO_HOST -e MONGO_USERNAME -e MONGO_PASSWORD -e TELEGRAM_USERNAME -e TELEGRAM_TOKEN -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/odmiana:${{ needs.version.outputs.new_tag }}

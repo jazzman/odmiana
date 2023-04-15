@@ -40,7 +40,7 @@ jobs:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
   build:
     name: Building
-    needs: analyze
+    needs: analysis
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

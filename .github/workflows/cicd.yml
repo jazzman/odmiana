@@ -41,6 +41,7 @@ jobs:
   version:
     name: Versioning
     runs-on: ubuntu-latest
+    needs: analysis
     steps:
       - uses: actions/checkout@v3
         with:
@@ -52,7 +53,7 @@ jobs:
           DEFAULT_BUMP: patch
   build:
     name: Building
-    needs: analysis
+    needs: version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

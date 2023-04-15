@@ -1,0 +1,16 @@
+name: "Testing"
+description: "Runs unit and integration tests"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Run Tests
+      shell: bash
+      run: gradle test
+    - name: Generate Coverage Report
+      shell: bash
+      run: gradle jacocoTestReport

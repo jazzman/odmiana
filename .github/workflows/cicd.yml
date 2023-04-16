@@ -96,19 +96,18 @@ jobs:
           host: ${{ secrets.AWS_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script:
-            - docker login
-            - docker pull ${{ secrets.DOCKER_USERNAME }}/odmiana:${{ needs.version.outputs.new_tag }}
-            - docker stop odmiana
-            - docker rm odmiana
-            - |
-              docker run --detach --name odmiana --network ec2-user_odmiana_network
-                -e MONGO_HOST 
-                -e MONGO_USERNAME
-                -e MONGO_PASSWORD
-                -e TELEGRAM_USERNAME
-                -e TELEGRAM_TOKEN
-                -e OWNER_ID
-                -e VERSION=${{ needs.version.outputs.new_tag }}
-                -p 8080:8080 
+          script: |
+            docker login
+            docker pull ${{ secrets.DOCKER_USERNAME }}/odmiana:${{ needs.version.outputs.new_tag }}
+            docker stop odmiana
+            docker rm odmiana
+            docker run --detach --name odmiana --network ec2-user_odmiana_network \
+                -e MONGO_HOST \
+                -e MONGO_USERNAME \
+                -e MONGO_PASSWORD \
+                -e TELEGRAM_USERNAME \
+                -e TELEGRAM_TOKEN \
+                -e OWNER_ID \
+                -e VERSION=${{ needs.version.outputs.new_tag }} \
+                -p 8080:8080 \
                 ${{ secrets.DOCKER_USERNAME }}/odmiana:${{ needs.version.outputs.new_tag }}

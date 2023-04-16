@@ -20,6 +20,10 @@ public interface Command {
      */
     String getDescription();
 
+    default Privacy privacy() {
+        return Privacy.PUBLIC;
+    }
+
     /**
      * Fired when user types in /command arg0 arg1 arg2..
      *

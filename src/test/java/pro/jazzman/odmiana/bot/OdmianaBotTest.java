@@ -18,6 +18,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import pro.jazzman.odmiana.bot.interfaces.Command;
 import pro.jazzman.odmiana.bot.services.Commands;
+import pro.jazzman.odmiana.configurations.Config;
+
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -32,12 +34,13 @@ class OdmianaBotTest {
     private final Message message = new Message();
 
     @Mock private AbstractTelegramBot bot;
+    @Mock private Config config;
     @Mock private Commands commands;
     @Mock private DefaultBotOptions botOptions;
 
     @BeforeEach
     void setUp() throws TelegramApiException {
-        odmianaBot = new OdmianaBot(bot, commands);
+        odmianaBot = new OdmianaBot(bot, config, commands);
 
         var user = new User();
         var chat = new Chat();

@@ -11,15 +11,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.jazzman.odmiana.bot.OdmianaBot;
-import pro.jazzman.odmiana.bot.commands.ContactsCommand;
-import pro.jazzman.odmiana.bot.commands.StartCommand;
 import pro.jazzman.odmiana.bot.interfaces.Command;
+import pro.jazzman.odmiana.bot.interfaces.Privacy;
 import pro.jazzman.odmiana.bot.replies.DefaultReply;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Commands")
@@ -30,7 +27,7 @@ class CommandsTest {
 
     @BeforeEach
     void init() {
-        commands = new Commands(new Command1(), new Command2());
+        commands = new Commands(new Command1(), new Command2(), new Command3());
 
         ReflectionTestUtils.setField(commands, "defaultReply", defaultReply);
     }
@@ -39,6 +36,16 @@ class CommandsTest {
     @DisplayName("List of BotCommands")
     void asBotCommands() {
         assertThat(commands.asBotCommands()).containsExactly(
+            new BotCommand("/command1", "Sample command 1"),
+            new BotCommand("/command2", "Sample command 2"),
+            new BotCommand("/command3", "Sample command 3")
+        );
+    }
+
+    @Test
+    @DisplayName("List of BotCommands with restricted access")
+    void asBotCommandsRestrictedAccess() {
+        assertThat(commands.asBotCommands(Privacy.PUBLIC)).containsExactly(
             new BotCommand("/command1", "Sample command 1"),
             new BotCommand("/command2", "Sample command 2")
         );
@@ -111,6 +118,32 @@ class CommandsTest {
         @Override
         public String getDescription() {
             return "Sample command 2";
+        }
+
+        @Override
+        public void handle(OdmianaBot bot, Update update) {
+        }
+    }
+
+    private static class Command3 implements Command {
+        @Override
+        public String getCommand() {
+            return "/command3";
+        }
+
+        @Override
+        public String getUsage() {
+            return "/command3";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Sample command 3";
+        }
+
+        @Override
+        public Privacy privacy() {
+            return Privacy.OWNER;
         }
 
         @Override

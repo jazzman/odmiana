@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import pro.jazzman.odmiana.bot.OdmianaBot;
+import pro.jazzman.odmiana.bot.interfaces.Privacy;
 import pro.jazzman.odmiana.bot.replies.DefaultReply;
 import pro.jazzman.odmiana.bot.interfaces.Command;
 
@@ -38,6 +39,10 @@ public class Commands {
 
     public List<BotCommand> asBotCommands() {
         return items.stream().map(c -> new BotCommand(c.getCommand(), c.getDescription())).toList();
+    }
+
+    public List<BotCommand> asBotCommands(Privacy privacy) {
+        return items.stream().filter(c -> c.privacy() == privacy).map(c -> new BotCommand(c.getCommand(), c.getDescription())).toList();
     }
 
     public boolean isCommand(String command) {

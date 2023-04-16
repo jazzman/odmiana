@@ -43,21 +43,18 @@ public class Html {
             return null;
         }
 
-        String text = element.text();
-
         return Arrays.stream(
-                text.substring(text.indexOf(":") + 2) // remove language
-                    .replaceAll("\\(\\d+\\.\\d+\\) ", "") // remove enumeration
+                element
+                    .text()
+                    .substring(element.text().indexOf(":") + 2)
                     .split(";")
             )
             .map(e -> e.split(","))
             .flatMap(Stream::of)
-            .map(String::trim)
-            .map(e -> e.replaceAll("\\s[żmwn]$", "")) // remove kind
+            .map(e -> e.replaceAll("\\s*\\(\\S+\\)\\s*", ""))
+            .map(e -> e.replaceAll("\\s[żmwn]$", ""))
             .map(String::trim)
             .distinct()
             .collect(Collectors.joining(", "));
     }
-
-
 }

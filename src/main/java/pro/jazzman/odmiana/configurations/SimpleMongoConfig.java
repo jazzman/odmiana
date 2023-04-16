@@ -39,7 +39,7 @@ public class SimpleMongoConfig {
     }
 
     @Bean
-    public MongoTemplate mongoTemplate() {
+    public MongoTemplate mongoTemplate() throws Exception {
         return new MongoTemplate(mongo(), database);
     }
 }

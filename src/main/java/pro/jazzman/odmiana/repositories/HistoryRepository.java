@@ -1,7 +1,20 @@
 package pro.jazzman.odmiana.repositories;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Repository;
 import pro.jazzman.odmiana.entities.History;
 
-public interface HistoryRepository extends MongoRepository<History, String> {
+@Repository
+public class HistoryRepository {
+    private final MongoTemplate mongo;
+
+    @Autowired
+    public HistoryRepository(MongoTemplate mongo) {
+        this.mongo = mongo;
+    }
+
+    public History save(History history) {
+        return mongo.save(history);
+    }
 }

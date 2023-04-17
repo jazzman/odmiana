@@ -9,6 +9,7 @@ import pro.jazzman.odmiana.bot.interfaces.Command;
 import pro.jazzman.odmiana.bot.interfaces.Privacy;
 import pro.jazzman.odmiana.bot.messages.HealthcheckView;
 import pro.jazzman.odmiana.configurations.Config;
+import pro.jazzman.odmiana.services.ApplicationHealthIndicator;
 
 import java.util.Objects;
 
@@ -19,6 +20,9 @@ public class HealthcheckCommand implements Command {
 
     @Autowired
     private HealthcheckView view;
+
+    @Autowired
+    private ApplicationHealthIndicator healthIndicator;
 
     @Override
     public String getCommand() {
@@ -43,7 +47,7 @@ public class HealthcheckCommand implements Command {
     public void handle(OdmianaBot bot, Update update) throws TelegramApiException {
         if (Objects.equals(config.getOwnerId(), update.getMessage().getChatId())) {
             bot.send(
-                view.render(),
+                view.render(healthIndicator.health()),
                 update
             );
         }

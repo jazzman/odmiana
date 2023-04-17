@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.actuate.health.Health;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -15,6 +16,9 @@ import pro.jazzman.odmiana.bot.OdmianaBot;
 import pro.jazzman.odmiana.bot.interfaces.Privacy;
 import pro.jazzman.odmiana.bot.messages.HealthcheckView;
 import pro.jazzman.odmiana.configurations.Config;
+import pro.jazzman.odmiana.services.ApplicationHealthIndicator;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,21 +29,26 @@ class HealthcheckCommandTest {
     private static final Long OWNER_ID = 1L;
     private static final String MESSAGE_TEXT = """
         Version: *1.2.3*
-        Status: *OK*
-        Database: *OK*
+        Application: *UP*
+        Database: *UP*
+        Disk: *UP*
+        Total Disk Space: *1000000000*
+        Free Disk Space: *999999999*
         """;
 
     @Mock private OdmianaBot bot;
     @Mock private Config config;
     @Mock private HealthcheckView view;
+    @Mock private ApplicationHealthIndicator healthIndicator;
     private HealthcheckCommand command;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         command = new HealthcheckCommand();
 
         ReflectionTestUtils.setField(command, "config", config);
         ReflectionTestUtils.setField(command, "view", view);
+        ReflectionTestUtils.setField(command, "healthIndicator", healthIndicator);
     }
 
     @Test
@@ -76,8 +85,20 @@ class HealthcheckCommandTest {
         Update update = new Update();
         update.setMessage(message);
 
+        Health.Builder status = Health.up();
+        status.withDetails(Map.of(
+            "version", "1.2.3",
+            "ping.status", "UP",
+            "database.status", "UP",
+            "disk.status", "UP",
+            "disk.total", "1000000000",
+            "disk.free", "987654321"
+        ));
+
+        when(healthIndicator.health()).thenReturn(status.build());
+
         when(config.getOwnerId()).thenReturn(OWNER_ID);
-        when(view.render()).thenReturn(MESSAGE_TEXT);
+        when(view.render(any(Health.class))).thenReturn(MESSAGE_TEXT);
 
         command.handle(bot, update);
 

@@ -3,8 +3,13 @@ package pro.jazzman.odmiana.configurations;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.system.DiskSpaceHealthIndicatorProperties;
+import org.springframework.boot.actuate.data.mongo.MongoHealthIndicator;
+import org.springframework.boot.actuate.health.PingHealthIndicator;
+import org.springframework.boot.actuate.system.DiskSpaceHealthIndicator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import pro.jazzman.odmiana.bot.LongPollingBot;
 
 @Configuration
@@ -20,5 +25,20 @@ public class Config {
     @Bean
     public LongPollingBot bot(@Value("${TELEGRAM_USERNAME}") String username, @Value("${TELEGRAM_TOKEN}") String token) {
         return new LongPollingBot(username, token);
+    }
+
+    @Bean
+    public DiskSpaceHealthIndicator diskSpaceHealthIndicator(DiskSpaceHealthIndicatorProperties properties) {
+        return new DiskSpaceHealthIndicator(properties.getPath(), properties.getThreshold());
+    }
+
+    @Bean
+    public PingHealthIndicator pingHealthIndicator() {
+        return new PingHealthIndicator();
+    }
+
+    @Bean
+    public MongoHealthIndicator mongoHealthIndicator(MongoTemplate mongoTemplate) {
+        return new MongoHealthIndicator(mongoTemplate);
     }
 }

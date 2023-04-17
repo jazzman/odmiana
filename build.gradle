@@ -23,6 +23,7 @@ dependencies {
 	implementation("com.github.unafraid.telegram-apis:CoreAPI:1.0.13")
 	implementation 'org.jsoup:jsoup:1.15.4'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "org.testcontainers:junit-jupiter:1.17.6"
 	testImplementation "org.testcontainers:mockserver:1.17.6"

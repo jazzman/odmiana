@@ -12,4 +12,4 @@ wikislownik:
   url: https://pl.wiktionary.org/w/api.php?action=parse&format=json&prop=text|categories&page=
 bot:
   owner_id: ${OWNER_ID}
-  version: ${VERSION:unknown}
+  version: ${VERSION:0.0.0}

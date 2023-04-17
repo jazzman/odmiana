@@ -34,13 +34,12 @@ class OdmianaBotTest {
     private final Message message = new Message();
 
     @Mock private AbstractTelegramBot bot;
-    @Mock private Config config;
     @Mock private Commands commands;
     @Mock private DefaultBotOptions botOptions;
 
     @BeforeEach
-    void setUp() throws TelegramApiException {
-        odmianaBot = new OdmianaBot(bot, config, commands);
+    void setUp() {
+        odmianaBot = new OdmianaBot(bot, commands);
 
         var user = new User();
         var chat = new Chat();

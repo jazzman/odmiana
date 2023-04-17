@@ -8,6 +8,7 @@ import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import pro.jazzman.odmiana.helpers.Language;
 import pro.jazzman.odmiana.parsers.Parser;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,7 +23,7 @@ public class Html {
         this.parser = parser;
     }
 
-    public Word parse(String lang) throws Exception {
+    public Word parse(String lang) throws IOException {
         Word word = parser.parse(document);
 
         if (word == null) {

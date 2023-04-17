@@ -13,7 +13,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 import org.telegram.telegrambots.meta.generics.BotOptions;
 import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import pro.jazzman.odmiana.bot.interfaces.Privacy;
-import pro.jazzman.odmiana.configurations.Config;
 import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.bot.services.Commands;
 
@@ -23,13 +22,11 @@ import java.util.*;
 @Slf4j
 public class OdmianaBot implements LongPollingBot {
     private final TelegramLongPollingBot bot;
-    private final Config config;
     private final Commands commands;
 
     @Autowired
-    public OdmianaBot(TelegramLongPollingBot bot, Config config, Commands commands) {
+    public OdmianaBot(TelegramLongPollingBot bot, Commands commands) {
         this.bot = bot;
-        this.config = config;
         this.commands = commands;
     }
 

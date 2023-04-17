@@ -43,7 +43,7 @@ class CellsTest {
     @Test
     @DisplayName("Returns an empty string when cell is missing")
     void textInCellMissingCellReturnsEmptyString() {
-        assertThat(cells.textInCell(5)).isEqualTo("");
+        assertThat(cells.textInCell(5)).isEmpty();
     }
 
     @Test

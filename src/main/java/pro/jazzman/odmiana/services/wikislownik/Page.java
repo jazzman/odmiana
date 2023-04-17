@@ -19,7 +19,7 @@ public class Page {
     private final String url;
     private final String word;
 
-    public Html html() throws Exception {
+    public Html html() throws IOException {
         var response = get(url + word);
 
         if (response.getBody() == null) {

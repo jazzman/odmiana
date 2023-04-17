@@ -58,12 +58,12 @@ class ApplicationHealthIndicatorTest {
     @DisplayName("Returns UP status if all services are UP")
     void health() {
         Health health = indicator.health();
-        assertThat(health.getDetails().get("version")).isEqualTo(VERSION);
-        assertThat(health.getDetails().get("ping.status")).isEqualTo(UP);
-        assertThat(health.getDetails().get("database.status")).isEqualTo(UP);
-        assertThat(health.getDetails().get("disk.status")).isEqualTo(UP);
-        assertThat(health.getDetails().get("disk.total")).isEqualTo(TOTAL_SPACE);
-        assertThat(health.getDetails().get("disk.free")).isEqualTo(FREE_SPACE);
+        assertThat(health.getDetails()).containsEntry("version", VERSION);
+        assertThat(health.getDetails()).containsEntry("ping.status", UP);
+        assertThat(health.getDetails()).containsEntry("database.status", UP);
+        assertThat(health.getDetails()).containsEntry("disk.status", UP);
+        assertThat(health.getDetails()).containsEntry("disk.total", TOTAL_SPACE);
+        assertThat(health.getDetails()).containsEntry("disk.free", FREE_SPACE);
         assertThat(health.getStatus()).isEqualTo(Status.UP);
     }
 
@@ -73,12 +73,12 @@ class ApplicationHealthIndicatorTest {
         when(mongoHealthIndicator.health()).thenReturn(Health.down().build());
 
         Health health = indicator.health();
-        assertThat(health.getDetails().get("version")).isEqualTo(VERSION);
-        assertThat(health.getDetails().get("ping.status")).isEqualTo(UP);
-        assertThat(health.getDetails().get("database.status")).isEqualTo(DOWN);
-        assertThat(health.getDetails().get("disk.status")).isEqualTo(UP);
-        assertThat(health.getDetails().get("disk.total")).isEqualTo(TOTAL_SPACE);
-        assertThat(health.getDetails().get("disk.free")).isEqualTo(FREE_SPACE);
+        assertThat(health.getDetails()).containsEntry("version", VERSION);
+        assertThat(health.getDetails()).containsEntry("ping.status", UP);
+        assertThat(health.getDetails()).containsEntry("database.status", DOWN);
+        assertThat(health.getDetails()).containsEntry("disk.status", UP);
+        assertThat(health.getDetails()).containsEntry("disk.total", TOTAL_SPACE);
+        assertThat(health.getDetails()).containsEntry("disk.free", FREE_SPACE);
         assertThat(health.getStatus()).isEqualTo(Status.DOWN);
     }
 }

@@ -9,6 +9,7 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -19,7 +20,7 @@ public class SJP {
         this.url = url;
     }
 
-    public String get(String word) throws Exception {
+    public String get(String word) throws IOException {
         Element infinitive = document(url + "/" + word).selectFirst("a.lc");
 
         if (infinitive == null) {
@@ -29,7 +30,7 @@ public class SJP {
         return infinitive.text();
     }
 
-    private Document document(String url) throws Exception {
+    private Document document(String url) throws IOException {
         try {
             return Jsoup.connect(url).timeout(5000).get();
         } catch (HttpStatusException e) {

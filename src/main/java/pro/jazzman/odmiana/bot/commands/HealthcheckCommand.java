@@ -39,6 +39,7 @@ public class HealthcheckCommand implements Command {
         return "Application Healthcheck";
     }
 
+    @Override
     public Privacy privacy() {
         return Privacy.OWNER;
     }

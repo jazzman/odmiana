@@ -1,100 +1,97 @@
 package pro.jazzman.odmiana.bot.messages;
 
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
-import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.entities.partsofspeech.Noun;
-import java.util.HashMap;
+import pro.jazzman.odmiana.entities.partsofspeech.NounType;
+
+import java.util.*;
 
 @AllArgsConstructor
 public class NounView implements View {
-    private static final String MIANOWNIK = "mianownik";
-    private static final String TEMPLATE = """
-        *${mianownik}*${translation}
-            
-        *Liczba Pojedyncza* | *Mnoga*
+    private static final String HEADER = """
+        `${base}`${translation}
         
-        *M* (Kto? Co?): ${mianownik.singular} | ${mianownik.plural}
-        *D* (Kogo? Czego?): ${dopelniacz.singular} | ${dopelniacz.plural}
-        *C* (Komu? Czemu?): ${celownik.singular} | ${celownik.plural}
-        *B* (Kogo? Co?): ${biernik.singular} | ${biernik.plural}
-        *N* (Kim? Czym?): ${narzednik.singular} | ${narzednik.plural}
-        *M* (O kim? O czym?): ${miejscownik.singular} | ${miejscownik.plural}
-        *W* (O!): ${wolacz.singular} | ${wolacz.plural}
+        *Część mowy*: rzeczownik
+        *Rodzaj*: ${type}
         """;
 
-    private static final String SINGULAR_TEMPLATE = """
-        *${mianownik}*${translation}
-            
-        *Liczba Pojedyncza*
-        
-        *M* (Kto? Co?): ${mianownik.singular}
-        *D* (Kogo? Czego?): ${dopelniacz.singular}
-        *C* (Komu? Czemu?): ${celownik.singular}
-        *B* (Kogo? Co?): ${biernik.singular}
-        *N* (Kim? Czym?): ${narzednik.singular}
-        *M* (O kim? O czym?): ${miejscownik.singular}
-        *W* (O!): ${wolacz.singular}
-        """;
-
-    private static final String PLURAL_TEMPLATE = """
-        *${mianownik}*${translation}
-            
-        *Liczba Mnoga*
-        
-        *M* (Kto? Co?): ${mianownik.plural}
-        *D* (Kogo? Czego?): ${dopelniacz.plural}
-        *C* (Komu? Czemu?): ${celownik.plural}
-        *B* (Kogo? Co?): ${biernik.plural}
-        *N* (Kim? Czym?): ${narzednik.plural}
-        *M* (O kim? O czym?): ${miejscownik.plural}
-        *W* (O!): ${wolacz.plural}
+    private static final String CASES = """
+        *Liczba pojedyncza* | *mnoga*
+        ```
+        M: ${singular.mianownik} | ${plural.mianownik}
+        D: ${singular.dopelniacz} | ${plural.dopelniacz}
+        C: ${singular.celownik} | ${plural.celownik}
+        B: ${singular.biernik} | ${plural.biernik}
+        N: ${singular.narzednik} | ${plural.narzednik}
+        M: ${singular.miejscownik} | ${plural.miejscownik}
+        W: ${singular.wolacz} | ${plural.wolacz}
+        ```
         """;
 
     private final Noun noun;
 
-    public String render(String higlighted) {
+    public String render() {
+        String template = HEADER;
         var placeholders = new HashMap<String, String>();
         placeholders.put("translation", noun.hasTranslation() ? " - " + noun.getTranslation() : "");
 
-        if (noun.hasSingular()) {
-            placeholders.put("mianownik.singular", noun.getMianownikSingular());
-            placeholders.put("dopelniacz.singular", noun.getDopelniaczSingular());
-            placeholders.put("celownik.singular", noun.getCelownikSingular());
-            placeholders.put("biernik.singular", noun.getBiernikSingular());
-            placeholders.put("narzednik.singular", noun.getNarzednikSingular());
-            placeholders.put("miejscownik.singular", noun.getMiejscownikSingular());
-            placeholders.put("wolacz.singular", noun.getWolaczSingular());
+        placeholders.put("base", noun.getBase());
+        placeholders.put("type", noun.getType() != null ? noun.getType().inPolish() + emoji(noun.getType()) : "---");
+
+        if (!noun.singulars().isEmpty() || !noun.plurals().isEmpty()) {
+            template += System.lineSeparator() + CASES;
+
+            int maxLength = maxLength(noun.singulars());
+
+            placeholders.put("singular.mianownik", fixedString(noun.getSingularMianownik(), maxLength));
+            placeholders.put("singular.dopelniacz", fixedString(noun.getSingularDopelniacz(), maxLength));
+            placeholders.put("singular.celownik", fixedString(noun.getSingularCelownik(), maxLength));
+            placeholders.put("singular.biernik", fixedString(noun.getSingularBiernik(), maxLength));
+            placeholders.put("singular.narzednik", fixedString(noun.getSingularNarzednik(), maxLength));
+            placeholders.put("singular.miejscownik", fixedString(noun.getSingularMiejscownik(), maxLength));
+            placeholders.put("singular.wolacz", fixedString(noun.getSingularWolacz(), maxLength));
+
+            placeholders.put("plural.mianownik", noun.getPluralMianownik());
+            placeholders.put("plural.dopelniacz", noun.getPluralDopelniacz());
+            placeholders.put("plural.celownik", noun.getPluralCelownik());
+            placeholders.put("plural.biernik", noun.getPluralBiernik());
+            placeholders.put("plural.narzednik", noun.getPluralNarzednik());
+            placeholders.put("plural.miejscownik", noun.getPluralMiejscownik());
+            placeholders.put("plural.wolacz", noun.getPluralWolacz());
+
+            placeholders.replaceAll((k, v) -> v != null ? v : "-");
         }
 
-        if (noun.hasPlural()) {
-            placeholders.put("mianownik.plural", noun.getMianownikPlural());
-            placeholders.put("dopelniacz.plural", noun.getDopelniaczPlural());
-            placeholders.put("celownik.plural", noun.getCelownikPlural());
-            placeholders.put("biernik.plural", noun.getBiernikPlural());
-            placeholders.put("narzednik.plural", noun.getNarzednikPlural());
-            placeholders.put("miejscownik.plural", noun.getMiejscownikPlural());
-            placeholders.put("wolacz.plural", noun.getWolaczPlural());
+        return StringSubstitutor.replace(template, placeholders);
+    }
+
+    private String fixedString(String word, int length) {
+        if (word != null && !word.isBlank()) {
+            return StringUtils.rightPad(word, length);
         }
 
-        placeholders.replaceAll((k, v) -> v.equals(higlighted) ? "*" + v + "* 👈" : v);
+        return "-".repeat(length);
+    }
 
-        placeholders.put(MIANOWNIK, noun.getMianownikSingular());
+    private int maxLength(String... words) {
+        return Arrays.stream(words)
+            .filter(Objects::nonNull)
+            .max(Comparator.comparing(String::length))
+            .map(String::length).orElse(5);
+    }
 
-        if (noun.hasSingular() && noun.hasPlural()) {
-            return StringSubstitutor.replace(TEMPLATE, placeholders);
-        }
+    private int maxLength(List<String> words) {
+        return maxLength(words.toArray(new String[0]));
+    }
 
-        if (noun.hasSingular()) {
-            return StringSubstitutor.replace(SINGULAR_TEMPLATE, placeholders);
-        }
-
-        if (noun.hasPlural()) {
-            placeholders.put(MIANOWNIK, noun.getMianownikPlural());
-
-            return StringSubstitutor.replace(PLURAL_TEMPLATE, placeholders);
-        }
-
-        throw new ApplicationRuntimeException("Unable to render a message");
+    private String emoji(NounType type) {
+        return switch (type) {
+            case MESKOOSOBOWY, MESKORZECZOWY, MESKOZYWOTNY -> "🧔🏼";
+            case ZENSKI -> "👩🏼";
+            case NIJAKI_1, NIJAKI_2 -> "🍏";
+            case PRZYMNOGI_1, PRZYMNOGI_2 -> "";
+        };
     }
 }

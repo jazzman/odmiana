@@ -1,5 +1,6 @@
 package pro.jazzman.odmiana.parsers;
 
+import lombok.AllArgsConstructor;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import pro.jazzman.odmiana.entities.partsofspeech.Adjective;
@@ -8,11 +9,14 @@ import pro.jazzman.odmiana.services.elements.Table;
 
 import java.io.IOException;
 
+@AllArgsConstructor
 public class AdjectiveParser implements Parser {
     private static final String TABLE_SELECTOR = "table.wikitable.odmiana.adj";
 
+    private final Document document;
+
     @Override
-    public Word parse(Document document) throws IOException {
+    public Word parse() throws IOException {
         Element element = document.selectFirst(TABLE_SELECTOR);
 
         if (element == null) {

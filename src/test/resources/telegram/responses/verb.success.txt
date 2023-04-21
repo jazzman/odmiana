@@ -1,29 +1,61 @@
-*kochać* - love, be in love, make love
+`kochać`
 
-*Liczba Pojedyncza* | *Mnoga*
+⏰*Czas teraźniejszy* - *liczba pojedyncza* | *mnoga*
+```
+1 os: kocham  | kochamy
+2 os: kochasz | kochacie
+3 os: kocha   | kochają
+```
 
-⌛*Czas teraźniejszy*:
+⏰*Czas przeszły* - *liczba pojedyncza* | *mnoga*
+```
+🧔🏼1 os: kochałem | kochaliśmy
+🧔🏼‍2 os: kochałeś | kochaliście
+🧔🏼3 os: kochał   | kochali
 
-1 os. - *kocham* 👈 | kochamy
-2 os. - kochasz | kochacie
-3 os. - kocha | kochają
+👩🏼1 os: kochałam | kochałyśmy
+👩🏼2 os: kochałaś | kochałyście
+👩🏼3 os: kochała  | kochały
 
-⌛*Czas przeszły*:
+🍏1 os: kochałom | kochałyśmy
+🍏2 os: kochałoś | kochałyście
+🍏3 os: kochało  | kochały
+```
 
-🧔🏼1 os. - kochałem | kochaliśmy
-🧔🏼‍2 os. - kochałeś | kochaliście
-🧔🏼3 os. - kochał | kochali
+⏰*Czas przyszły* - *liczba pojedyncza*
+```
+🧔🏼1 os: będę kochał
+🧔🏼‍2 os: będziesz kochał
+🧔🏼3 os: będzie kochał
 
-👩🏼1 os. - kochałam | kochałyśmy
-👩🏼2 os. - kochałaś | kochałyście
-👩🏼3 os. - kochała | kochały
+👩🏼1 os: będę kochała
+👩🏼2 os: będziesz kochała
+👩🏼3 os: będzie kochała
 
-🍏1 os. - kochałom | kochałyśmy
-🍏2 os. - kochałoś | kochałyście
-🍏3 os. - kochało | kochały
+🍏1 os: będę kochało
+🍏2 os: będziesz kochało
+🍏3 os: będzie kochało
+```
 
-*Tryb rozkazujący*:
+⏰*Czas przyszły* - *liczba mnoga*
+```
+🙎🏼‍1 os: będziemy kochali
+🙎🏼‍2 os: będziecie kochali
+🙎🏼‍3 os: będą kochali
 
-1 os. - niech kocham | kochajmy
-2 os. - kochaj | kochajcie
-3 os. - niech kocha | niech kochają
+🙅🏼‍1 os: będziemy kochały
+🙅🏼‍2 os: będziecie kochały
+🙅🏼‍3 os: będą kochały
+```
+
+📢*Tryb rozkazujący*
+```
+1 os: ------ | kochajmy
+2 os: kochaj | kochajcie
+```
+
+*Bezosobnik*: `kochano`
+*Gerundium*: `kochanie`
+*Imiesłów przysłówkowy współczesny*: ` kochając`
+*Imiesłów przymiotnikowy czynny*: ` kochający`
+*Imiesłów przymiotnikowy bierny*: ` kochany`

@@ -10,8 +10,7 @@ import pro.jazzman.odmiana.bot.OdmianaBot;
 import pro.jazzman.odmiana.entities.History;
 import pro.jazzman.odmiana.helpers.Localized;
 import pro.jazzman.odmiana.services.HistoryService;
-import pro.jazzman.odmiana.services.vocabulary.SJP;
-import pro.jazzman.odmiana.services.vocabulary.Wikislownik;
+import pro.jazzman.odmiana.services.vocabulary.WSJP;
 
 /**
  * This class does the hard work of searching and parsing to return all the forms of the word when user enters anything but the command
@@ -20,11 +19,12 @@ import pro.jazzman.odmiana.services.vocabulary.Wikislownik;
 @Slf4j
 @AllArgsConstructor
 public class DefaultReply {
-    private Wikislownik wikislownik;
-    private SJP sjp;
+    private WSJP wsjp;
     private HistoryService historyService;
 
     public void onMessage(OdmianaBot bot, Update update) throws TelegramApiException {
+        bot.sendChatAction(update);
+
         String message = message(update);
 
         bot.send(message, update);
@@ -38,15 +38,7 @@ public class DefaultReply {
         Exception exception = null;
 
         try {
-            String word = sjp.get(text);
-
-            return
-                wikislownik
-                    .page(word)
-                    .html()
-                    .parse(lang)
-                    .message(text);
-
+            return wsjp.get(text).message();
         } catch (NotFoundException e) {
             log.info(e.getMessage());
             exception = e;

@@ -6,10 +6,11 @@ spring:
       database: ${MONGO_DATABASE:odmiana}
       username: ${MONGO_USERNAME:root}
       password: ${MONGO_PASSWORD:secret}
-sjp:
-  url: https://sjp.pl
-wikislownik:
-  url: https://pl.wiktionary.org/w/api.php?action=parse&format=json&prop=text|categories&page=
+wsjp:
+  url: https://wsjp.pl
 bot:
   owner_id: ${OWNER_ID}
   version: ${VERSION:0.0.0}
+  cache: ${CACHE}
+server:
+  port: ${APPLICATION_PORT}

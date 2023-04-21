@@ -47,8 +47,8 @@ public class Adjective implements Word {
     private String translation;
 
     @Override
-    public String message(String highlighted) {
-        return new AdjectiveView(this).render(highlighted);
+    public String message() {
+        return new AdjectiveView(this).render();
     }
 
     @Override

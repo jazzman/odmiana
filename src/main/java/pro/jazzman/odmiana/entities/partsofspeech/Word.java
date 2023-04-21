@@ -1,7 +1,7 @@
 package pro.jazzman.odmiana.entities.partsofspeech;
 
 public interface Word {
-    String message(String highlighted);
+    String message();
 
     void setTranslation(String translation);
 

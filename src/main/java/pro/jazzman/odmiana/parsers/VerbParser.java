@@ -1,79 +1,214 @@
 package pro.jazzman.odmiana.parsers;
 
-import jakarta.ws.rs.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import pro.jazzman.odmiana.entities.partsofspeech.Verb;
 import pro.jazzman.odmiana.services.elements.Table;
 import java.io.IOException;
 
 @Slf4j
+@RequiredArgsConstructor
 public class VerbParser implements Parser {
-    private static final String TABLE_SELECTOR = "table.wikitable";
+    private final Document document;
+    private final Verb verb = new Verb();
 
-    public Word parse(Document document) throws IOException {
-        Element element = document.selectFirst(TABLE_SELECTOR);
-
-        if (element == null) {
-            throw new IOException("Unable to get table for the verb by the following selector: '" + TABLE_SELECTOR + "'");
-        }
-
-        var table = Table.from(element);
-
-        var rows = table.rows();
-        var present = rows.row(3).cells();
-        var pastM = rows.row(4).cells();
-        var pastF = rows.row(5).cells();
-        var pastN = rows.row(6).cells();
-        var imperative = rows.row(7).cells();
-
-        Verb verb = new Verb();
-        verb.setInfinitive(infinitive(table));
-
-        verb.setSingularPresent1(present.textInCell(0));
-        verb.setSingularPresent2(present.textInCell(1));
-        verb.setSingularPresent3(present.textInCell(2));
-        verb.setSingularPastMale1(pastM.textInCell(0));
-        verb.setSingularPastMale2(pastM.textInCell(1));
-        verb.setSingularPastMale3(pastM.textInCell(2));
-        verb.setSingularPastFemale1(pastF.textInCell(0));
-        verb.setSingularPastFemale2(pastF.textInCell(1));
-        verb.setSingularPastFemale3(pastF.textInCell(2));
-        verb.setSingularPastNeutral1(pastN.textInCell(0));
-        verb.setSingularPastNeutral2(pastN.textInCell(1));
-        verb.setSingularPastNeutral3(pastN.textInCell(2));
-        verb.setSingularImperative1(imperative.textInCell(0));
-        verb.setSingularImperative2(imperative.textInCell(1));
-        verb.setSingularImperative3(imperative.textInCell(2));
-
-        verb.setPluralPresent1(present.textInCell(3));
-        verb.setPluralPresent2(present.textInCell(4));
-        verb.setPluralPresent3(present.textInCell(5));
-        verb.setPluralPastMale1(pastM.textInCell(3));
-        verb.setPluralPastMale2(pastM.textInCell(4));
-        verb.setPluralPastMale3(pastM.textInCell(5));
-        verb.setPluralPastFemale1(pastF.textInCell(3));
-        verb.setPluralPastFemale2(pastF.textInCell(4));
-        verb.setPluralPastFemale3(pastF.textInCell(5));
-        verb.setPluralPastNeutral1(pastF.textInCell(3));
-        verb.setPluralPastNeutral2(pastF.textInCell(4));
-        verb.setPluralPastNeutral3(pastF.textInCell(5));
-        verb.setPluralImperative1(imperative.textInCell(3));
-        verb.setPluralImperative2(imperative.textInCell(4));
-        verb.setPluralImperative3(imperative.textInCell(5));
+    public Word parse() throws IOException {
+        setInfinitive();
+        setPresent();
+        setPast();
+        setFuture();
+        setImperative();
+        setImpersonal();
+        setGerund();
+        setModernAdverbialParticiple();
+        setActiveParticiple();
+        setPassiveAdjectiveParticiple();
 
         return verb;
     }
 
-    private String infinitive(Table table) throws NotFoundException, IOException {
-        var infinitive = table.rows().row(2).cells().cell(0).selectFirst("b");
+    private void setInfinitive() {
+        Element h1 = document.selectFirst("h1");
 
-        if (infinitive == null) {
-            throw new NotFoundException("Unable to find an infinitive");
+        if (h1 == null) {
+            log.warn("Unable to find an h1 tag on the page");
+        } else {
+            verb.setInfinitive(h1.text());
+        }
+    }
+
+    private void setPresent() {
+        Table presentTenseTable = table("Czas teraźniejszy", document);
+
+        if (presentTenseTable == null) {
+            log.warn("Unable to find a present tense table on the page");
+        } else {
+            verb.setSingularPresent1(presentTenseTable.extract(1,0));
+            verb.setSingularPresent2(presentTenseTable.extract(2, 0));
+            verb.setSingularPresent3(presentTenseTable.extract(3, 0));
+            verb.setPluralPresent1(presentTenseTable.extract(1, 1));
+            verb.setPluralPresent2(presentTenseTable.extract(2, 1));
+            verb.setPluralPresent3(presentTenseTable.extract(3, 1));
+        }
+    }
+
+    private void setPast() {
+        Table pastTenseTable = table("Czas przeszły", document);
+
+        if (pastTenseTable == null) {
+            log.warn("Unable to find a past tense table on the page");
+        } else {
+            verb.setSingularPastMale1(pastTenseTable.extract(2, 0, "span.forma:eq(0)"));
+            verb.setSingularPastMale2(pastTenseTable.extract(3, 0, "span.forma:eq(0)"));
+            verb.setSingularPastMale3(pastTenseTable.extract(4, 0, "span.forma:eq(0)"));
+
+            verb.setSingularPastFemale1(pastTenseTable.extract(2, 1, "span.forma:eq(0)"));
+            verb.setSingularPastFemale2(pastTenseTable.extract(3, 1, "span.forma:eq(0)"));
+            verb.setSingularPastFemale3(pastTenseTable.extract(4, 1, "span.forma:eq(0)"));
+
+            verb.setSingularPastNeutral1(pastTenseTable.extract(2, 2, "span.forma:eq(0)"));
+            verb.setSingularPastNeutral2(pastTenseTable.extract(3, 2, "span.forma:eq(0)"));
+            verb.setSingularPastNeutral3(pastTenseTable.extract(4, 2, "span.forma:eq(0)"));
+
+            verb.setPluralPastMale1(pastTenseTable.extract(2, 3, "span.forma:eq(0)"));
+            verb.setPluralPastMale2(pastTenseTable.extract(3, 3, "span.forma:eq(0)"));
+            verb.setPluralPastMale3(pastTenseTable.extract(4, 3, "span.forma:eq(0)"));
+
+            verb.setPluralPastFemale1(pastTenseTable.extract(2, 4, "span.forma:eq(0)"));
+            verb.setPluralPastFemale2(pastTenseTable.extract(3, 4, "span.forma:eq(0)"));
+            verb.setPluralPastFemale3(pastTenseTable.extract(4, 4, "span.forma:eq(0)"));
+
+            verb.setPluralPastNeutral1(pastTenseTable.extract(2, 4, "span.forma:eq(0)"));
+            verb.setPluralPastNeutral2(pastTenseTable.extract(3, 4, "span.forma:eq(0)"));
+            verb.setPluralPastNeutral3(pastTenseTable.extract(4, 4, "span.forma:eq(0)"));
+        }
+    }
+
+    private void setFuture() {
+        Table table = table("Czas przyszły", document);
+
+        if (table == null) {
+            log.warn("Unable to find a future tense table on the page");
+
+            return;
         }
 
-        return infinitive.text();
+        verb.setSingularFutureMale1(table.extract(2, 0, "span.forma:eq(0)"));
+        verb.setSingularFutureMale2(table.extract(3, 0, "span.forma:eq(0)"));
+        verb.setSingularFutureMale3(table.extract(4, 0, "span.forma:eq(0)"));
+        verb.setSingularFutureFemale1(table.extract(2, 1, "span.forma:eq(0)"));
+        verb.setSingularFutureFemale2(table.extract(3, 1, "span.forma:eq(0)"));
+        verb.setSingularFutureFemale3(table.extract(4, 1, "span.forma:eq(0)"));
+        verb.setSingularFutureNeutral1(table.extract(2, 2, "span.forma:eq(0)"));
+        verb.setSingularFutureNeutral2(table.extract(3, 2, "span.forma:eq(0)"));
+        verb.setSingularFutureNeutral3(table.extract(4, 2, "span.forma:eq(0)"));
+
+        verb.setPluralFutureMale1(table.extract(2, 3, "span.forma:eq(0)"));
+        verb.setPluralFutureMale2(table.extract(3, 3, "span.forma:eq(0)"));
+        verb.setPluralFutureMale3(table.extract(4, 3, "span.forma:eq(0)"));
+        verb.setPluralFutureNonMale1(table.extract(2, 4, "span.forma:eq(0)"));
+        verb.setPluralFutureNonMale2(table.extract(3, 4, "span.forma:eq(0)"));
+        verb.setPluralFutureNonMale3(table.extract(4, 4, "span.forma:eq(0)"));
+    }
+
+    private void setImperative() {
+        Table imperativeTable = table("Tryb rozkazujący", document);
+
+        if (imperativeTable == null) {
+            log.warn("Unable to find an imperative table on the page");
+        } else {
+            verb.setSingularImperative2(imperativeTable.extract(2, 0, "span.forma:eq(0)"));
+
+            verb.setPluralImperative1(imperativeTable.extract(1, 0, "span.forma:eq(0)"));
+            verb.setPluralImperative2(imperativeTable.extract(2, 1, "span.forma:eq(0)"));
+        }
+    }
+
+    private void setImpersonal() {
+        Element p = document.selectFirst("p:contains(bezosobnik:)");
+
+        if (p == null) {
+            log.warn("Unable to find impersonal form on the page");
+
+            return;
+        }
+
+        verb.setImpersonal(StringUtils.substringAfter(p.text(), "bezosobnik: "));
+    }
+
+    private void setGerund() {
+        Element p = document.selectFirst("p:contains(gerundium:)");
+
+        if (p == null) {
+            log.warn("Unable to find gerund form on the page");
+
+            return;
+        }
+
+        verb.setGerund(StringUtils.substringAfter(p.text(), "gerundium: "));
+    }
+
+    private void setModernAdverbialParticiple() {
+        final String PATTERN = "imiesłów przysłówkowy współczesny:";
+        Element p = document.selectFirst("p:contains(" + PATTERN + ")");
+
+        if (p == null) {
+            log.warn("Unable to find modern adverbial participle form on the page");
+
+            return;
+        }
+
+        verb.setModernAdverbialParticiple(StringUtils.substringAfter(p.text(), PATTERN));
+    }
+
+    private void setActiveParticiple() {
+        final String PATTERN = "imiesłów przymiotnikowy czynny:";
+        Element p = document.selectFirst("p:contains(" + PATTERN + ")");
+
+        if (p == null) {
+            log.warn("Unable to find active participle form on the page");
+
+            return;
+        }
+
+        verb.setActiveParticiple(StringUtils.substringAfter(p.text(), PATTERN));
+    }
+
+    private void setPassiveAdjectiveParticiple() {
+        final String PATTERN = "imiesłów przymiotnikowy bierny:";
+        Element p = document.selectFirst("p:contains(" + PATTERN + ")");
+
+        if (p == null) {
+            log.warn("Unable to find active participle form on the page");
+
+            return;
+        }
+
+        verb.setPassiveAdjectiveParticiple(StringUtils.substringAfter(p.text(), PATTERN));
+    }
+
+    private Table table(String tense, Document document) {
+        Element p = document.selectFirst("p:contains(" + tense + ")");
+
+        if (p != null) {
+            Element parent = p.parent();
+
+            if (parent != null) {
+                Elements children = parent.children();
+
+                Element element = children.get(children.indexOf(p) + 1).selectFirst("table");
+
+                if (element != null && "table".equals(element.tag().getName())) {
+                    return Table.from(element);
+                }
+            }
+        }
+
+        return null;
     }
 }

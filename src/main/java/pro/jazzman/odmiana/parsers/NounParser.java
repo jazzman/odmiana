@@ -1,69 +1,106 @@
 package pro.jazzman.odmiana.parsers;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+import pro.jazzman.odmiana.entities.partsofspeech.NounType;
 import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import pro.jazzman.odmiana.entities.partsofspeech.Noun;
 import pro.jazzman.odmiana.services.elements.Cells;
 import pro.jazzman.odmiana.services.elements.Table;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Slf4j
+@AllArgsConstructor
 public class NounParser implements Parser {
-    private static final String TABLE_SELECTOR = "table.wikitable.odmiana";
-    @Override
-    public Word parse(Document document) throws IOException {
-        Element element = document.selectFirst(TABLE_SELECTOR);
+    private final Document document;
+    private final Noun noun = new Noun();
 
-        if (element == null) {
-            throw new IOException("Unable to get table for the noun by the following selector: '" + TABLE_SELECTOR + "'");
-        }
+    public Word parse() throws IOException {
+        setBase();
 
-        var table = Table.from(element);
-        var rows = table.rows();
-        Cells header = rows.row(0).headerCells();
+        Element li = document.selectFirst("li:has(div[data-tab-name=Odmiana])");
 
-        var mianownik = rows.row(1).cells();
-        var dopelniacz = rows.row(2).cells();
-        var celownik = rows.row(3).cells();
-        var biernik = rows.row(4).cells();
-        var narzednik = rows.row(5).cells();
-        var miejscownik = rows.row(6).cells();
-        var wolacz = rows.row(7).cells();
-
-        Noun noun = new Noun();
-
-        if ("liczba pojedyncza".equals(header.textInCell(1))) {
-            noun.setMianownikSingular(mianownik.textInCell(1));
-            noun.setDopelniaczSingular(dopelniacz.textInCell(1));
-            noun.setCelownikSingular(celownik.textInCell(1));
-            noun.setBiernikSingular(biernik.textInCell(1));
-            noun.setNarzednikSingular(narzednik.textInCell(1));
-            noun.setMiejscownikSingular(miejscownik.textInCell(1));
-            noun.setWolaczSingular(wolacz.textInCell(1));
-
-            if ("liczba mnoga".equals(header.textInCell(2))) {
-                noun.setMianownikPlural(mianownik.textInCell(2));
-                noun.setDopelniaczPlural(dopelniacz.textInCell(2));
-                noun.setCelownikPlural(celownik.textInCell(2));
-                noun.setBiernikPlural(biernik.textInCell(2));
-                noun.setNarzednikPlural(narzednik.textInCell(2));
-                noun.setMiejscownikPlural(miejscownik.textInCell(2));
-                noun.setWolaczPlural(wolacz.textInCell(2));
-            }
-        }
-
-        if ("liczba mnoga".equals(header.textInCell(1))) {
-            noun.setMianownikPlural(mianownik.textInCell(1));
-            noun.setDopelniaczPlural(dopelniacz.textInCell(1));
-            noun.setCelownikPlural(celownik.textInCell(1));
-            noun.setBiernikPlural(biernik.textInCell(1));
-            noun.setNarzednikPlural(narzednik.textInCell(1));
-            noun.setMiejscownikPlural(miejscownik.textInCell(1));
-            noun.setWolaczPlural(wolacz.textInCell(1));
+        if (li != null) {
+            setType(li);
+            setCases(li);
         }
 
         return noun;
+    }
+
+    private void setBase() {
+        Element h1 = document.selectFirst("h1");
+
+        if (h1 != null) {
+            noun.setBase(h1.text());
+        } else {
+            log.warn("Unable to find a header on the page to get a base form of the word");
+        }
+    }
+
+    private void setType(Element li) {
+        Element em = li.selectFirst("p:contains(rodzaj gramatyczny:) span em");
+
+        if (em != null) {
+            Optional<NounType> type = Arrays.stream(NounType.values())
+                .filter(t -> t.getAbbr().equals(em.text()))
+                .findFirst();
+
+            type.ifPresent(noun::setType);
+
+            return;
+        }
+
+        log.warn("Unable to find noun type on the page");
+    }
+
+    private void setCases(Element li) {
+        Table table = table(li);
+
+        if (table == null) {
+            log.warn("Cannot find a table with word cases");
+
+            return;
+        }
+
+        noun.setSingularMianownik(table.extract(1, 0, "span.forma:eq(0)"));
+        noun.setSingularDopelniacz(table.extract(2, 0, "span.forma:eq(0)"));
+        noun.setSingularCelownik(table.extract(3, 0, "span.forma:eq(0)"));
+        noun.setSingularBiernik(table.extract(4, 0, "span.forma:eq(0)"));
+        noun.setSingularNarzednik(table.extract(5, 0, "span.forma:eq(0)"));
+        noun.setSingularMiejscownik(table.extract(6, 0, "span.forma:eq(0)"));
+        noun.setSingularWolacz(table.extract(7, 0, "span.forma:eq(0)"));
+
+        noun.setPluralMianownik(table.extract(1, 1, "span.forma:eq(0)"));
+        noun.setPluralDopelniacz(table.extract(2, 1, "span.forma:eq(0)"));
+        noun.setPluralCelownik(table.extract(3, 1, "span.forma:eq(0)"));
+        noun.setPluralBiernik(table.extract(4, 1, "span.forma:eq(0)"));
+        noun.setPluralNarzednik(table.extract(5, 1, "span.forma:eq(0)"));
+        noun.setPluralMiejscownik(table.extract(6, 1, "span.forma:eq(0)"));
+        noun.setPluralWolacz(table.extract(7, 1, "span.forma:eq(0)"));
+    }
+
+    private Table table(Element li) {
+        Element element = li.selectFirst("table");
+
+        if (element == null) {
+            return null;
+        }
+
+        Elements rows = element.select("tr");
+
+        for (Element tr: rows) {
+            if (tr.text().isEmpty()) {
+                tr.remove();
+            }
+        }
+
+        return Table.from(element);
     }
 }

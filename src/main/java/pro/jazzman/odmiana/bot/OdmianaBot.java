@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.ActionType;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
@@ -46,6 +48,14 @@ public class OdmianaBot implements LongPollingBot {
         msg.disableWebPagePreview();
 
         bot.execute(msg);
+    }
+
+    public void sendChatAction(Update update) throws TelegramApiException {
+        SendChatAction action = new SendChatAction();
+        action.setAction(ActionType.TYPING);
+        action.setChatId(update.getMessage().getChatId());
+
+        bot.execute(action);
     }
 
     @Override

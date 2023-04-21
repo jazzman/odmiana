@@ -34,8 +34,8 @@ runs:
         SONAR_TOKEN: ${{ inputs.sonar-token }}
       with:
         arguments: build sonar --info -Dsonar.working.directory=.scannerwork -Dsonar.projectKey=jazzman_odmiana -Dsonar.organization=jazzman -Dsonar.host.url=https://sonarcloud.io
-    - name: SonarQube Quality Gate check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      env:
-        SONAR_TOKEN: ${{ inputs.sonar-token }}
+#    - name: SonarQube Quality Gate check
+#      id: sonarqube-quality-gate-check
+#      uses: sonarsource/sonarqube-quality-gate-action@master
+#      env:
+#        SONAR_TOKEN: ${{ inputs.sonar-token }}

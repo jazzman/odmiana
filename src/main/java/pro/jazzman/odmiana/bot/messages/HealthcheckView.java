@@ -7,6 +7,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+// TODO: Make this service implement common View interface
 @Service
 public class HealthcheckView {
     private static final DecimalFormat format = new DecimalFormat("#.##");

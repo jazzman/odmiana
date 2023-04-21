@@ -71,7 +71,7 @@ public class AdjectiveView implements View {
         """;
     private Adjective adjective;
 
-    public String render(String higlighted) {
+    public String render() {
         var placeholders = new HashMap<String, String>();
 
         placeholders.put("translation", adjective.hasTranslation() ? " - " + adjective.getTranslation() : "");
@@ -111,10 +111,6 @@ public class AdjectiveView implements View {
         placeholders.put("miejscownik.plural", adjective.getPluralMiejscownik());
         placeholders.put("wolacz.plural.male", adjective.getPluralMaleWolac());
         placeholders.put("wolacz.plural.nonmale", adjective.getPluralNonMaleWolac());
-
-        placeholders.replaceAll(
-            (k, v) -> v != null && v.equals(higlighted) && !v.equals(adjective.getSingularMaleMianownik()) ? "*" + v + "* 👈" : v
-        );
 
         return StringSubstitutor.replace(TEMPLATE, placeholders);
     }

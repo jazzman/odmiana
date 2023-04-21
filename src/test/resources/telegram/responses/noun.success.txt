@@ -1,11 +1,15 @@
-*kobieta* - woman
+`kobieta`
 
-*Liczba Pojedyncza* | *Mnoga*
+*Część mowy*: rzeczownik
+*Rodzaj*: żeński👩🏼
 
-*M* (Kto? Co?): kobieta | kobiety
-*D* (Kogo? Czego?): kobiety | kobiet
-*C* (Komu? Czemu?): *kobiecie* 👈 | kobietom
-*B* (Kogo? Co?): kobietę | kobiety
-*N* (Kim? Czym?): kobietą | kobietami
-*M* (O kim? O czym?): *kobiecie* 👈 | kobietach
-*W* (O!): kobieto | kobiety
+*Liczba pojedyncza* | *mnoga*
+```
+M: kobieta  | kobiety
+D: kobiety  | kobiet
+C: kobiecie | kobietom
+B: kobietę  | kobiety
+N: kobietą  | kobietami
+M: kobiecie | kobietach
+W: kobieto  | kobiety
+```

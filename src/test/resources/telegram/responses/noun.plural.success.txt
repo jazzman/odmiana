@@ -1,11 +1,15 @@
-*drzwi* - door, gate
+`drzwi`
 
-*Liczba Mnoga*
+*Część mowy*: rzeczownik
+*Rodzaj*: przymnogi
 
-*M* (Kto? Co?): drzwi
-*D* (Kogo? Czego?): drzwi
-*C* (Komu? Czemu?): *drzwiom* 👈
-*B* (Kogo? Co?): drzwi
-*N* (Kim? Czym?): drzwiami
-*M* (O kim? O czym?): drzwiach
-*W* (O!): drzwi
+*Liczba pojedyncza* | *mnoga*
+```
+M: ----- | drzwi
+D: ----- | drzwi
+C: ----- | drzwiom
+B: ----- | drzwi
+N: ----- | drzwiami
+M: ----- | drzwiach
+W: ----- | drzwi
+```

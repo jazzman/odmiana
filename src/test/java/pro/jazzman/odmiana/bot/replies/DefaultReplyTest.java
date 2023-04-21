@@ -20,19 +20,16 @@ import org.testcontainers.utility.DockerImageName;
 import pro.jazzman.odmiana.exceptions.ApplicationRuntimeException;
 import pro.jazzman.odmiana.bot.OdmianaBot;
 import pro.jazzman.odmiana.services.HistoryService;
-import pro.jazzman.odmiana.services.vocabulary.SJP;
-import pro.jazzman.odmiana.services.vocabulary.Wikislownik;
+import pro.jazzman.odmiana.services.vocabulary.WSJP;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * It does not make sense to test implementation in this case. Hopefully integration testing of the whole flow will make future refactoring easier
@@ -44,10 +41,7 @@ import static org.mockito.Mockito.when;
 class DefaultReplyTest {
     private static final int MOCK_SERVER_PORT = 1080;
     private static final String VERB = "kocham";
-    private static final String INFINITIVE = "kochać";
     private static final String BAD_WORD = "ddddddd";
-    private static final String NOUN = "kobiecie";
-    private static final String NOUN_MIANOWNIK = "kobieta";
     private static final String ADJECTIVE = "granatowego";
     private static final String ADJECTIVE_MIANOWNIK = "granatowy";
     private static final String LANGUAGE = "en";
@@ -69,8 +63,7 @@ class DefaultReplyTest {
     @BeforeEach
     void init() {
         reply = new DefaultReply(
-            new Wikislownik(String.format("http://%s:%d/page=", mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))),
-            new SJP(String.format("http://%s:%d", mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))),
+            new WSJP(String.format("http://%s:%d", mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))),
             historyService
         );
 
@@ -83,22 +76,39 @@ class DefaultReplyTest {
         update.setMessage(message);
     }
 
+    private String readFile(String name) throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        URL url = classLoader.getResource(name);
+
+        if (url == null) {
+            throw new FileNotFoundException("Unable to find '" + name + "' file");
+        }
+
+        return FileUtils.readFileToString(new File(url.getFile()), StandardCharsets.UTF_8);
+    }
+
+
     @Test
-    @DisplayName("[Verb] Parsed responses from 3rd-parties and sends the correct result")
-    void onMessageVerb(@Mock OdmianaBot bot) {
-        message.setText(VERB);
+    @DisplayName("[Verb] Parses responses from the source and sends an expected message")
+    void onMessageVerbWSJP(@Mock OdmianaBot bot) {
+        final String verb = "kocham";
 
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
-            client // sjp
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(VERB, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/verb.200.html")));
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/szukaj/podstawowe/wyniki").withQueryStringParameter("szukaj", verb), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/verb/search-results.html")));
 
-            client // wikislownik
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(INFINITIVE, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/verb.200.html")));
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/37947"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/verb/meanings.html")));
 
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/37947/kochac/4060071/matke"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/verb/final.html")));
+
+            message.setText(verb);
             reply.onMessage(bot, update);
 
             verify(bot).send(readFile("telegram/responses/verb.success.txt"), update);
@@ -108,109 +118,18 @@ class DefaultReplyTest {
     }
 
     @Test
-    @DisplayName("[Noun] Parsed responses from 3rd-parties and sends the correct result")
-    void onMessageNoun(@Mock OdmianaBot bot) {
-        message.setText(NOUN);
-        try (
-            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
-        ) {
-            client // sjp
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(NOUN, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/noun.200.html")));
+    @DisplayName("Sends an error if the word is not found on the source")
+    void onMessageWordNotFoundWSJP(@Mock OdmianaBot bot) {
+        final String word = "invalidword";
 
-            client // wikislownik
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(NOUN_MIANOWNIK, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/noun.200.html")));
-
-            reply.onMessage(bot, update);
-
-            verify(bot).send(readFile("telegram/responses/noun.success.txt"), update);
-        } catch (Exception e) {
-            throw new ApplicationRuntimeException(e);
-        }
-    }
-
-    @Test
-    @DisplayName("[Noun] Returns the result for nouns with singular form only")
-    void onMessageNounSingular(@Mock OdmianaBot bot) {
-        message.setText("tlenem");
-        try (
-            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
-        ) {
-            client // sjp
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/tlenem"), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/noun.singular.200.html")));
-
-            client // wikislownik
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode("tlen", StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/noun.singular.200.html")));
-
-            reply.onMessage(bot, update);
-
-            verify(bot).send(readFile("telegram/responses/noun.singular.success.txt"), update);
-        } catch (Exception e) {
-            throw new ApplicationRuntimeException(e);
-        }
-    }
-
-    @Test
-    @DisplayName("[Noun] Returns the result for nouns with plural form only")
-    void onMessageNounPlural(@Mock OdmianaBot bot) {
-        message.setText("drzwiom");
-        try (
-            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
-        ) {
-            client // sjp
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode("drzwiom", StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/noun.plural.200.html")));
-
-            client // wikislownik
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode("drzwi", StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/noun.plural.200.html")));
-
-            reply.onMessage(bot, update);
-
-            verify(bot).send(readFile("telegram/responses/noun.plural.success.txt"), update);
-        } catch (Exception e) {
-            throw new ApplicationRuntimeException(e);
-        }
-    }
-
-    @Test
-    @DisplayName("[Adjective] Parsed responses from 3rd-parties and sends the correct result")
-    void onMessageAdjective(@Mock OdmianaBot bot) {
-        message.setText(ADJECTIVE);
-        try (
-            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
-        ) {
-            client // sjp
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(ADJECTIVE, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("sjp/responses/adjective.200.html")));
-
-            client // wikislownik
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/page=" + URLEncoder.encode(ADJECTIVE_MIANOWNIK, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wikislownik/responses/adjective.200.html")));
-
-            reply.onMessage(bot, update);
-
-            verify(bot).send(readFile("telegram/responses/adjective.success.txt"), update);
-        } catch (Exception e) {
-            throw new ApplicationRuntimeException(e);
-        }
-    }
-
-    @Test
-    @DisplayName("Sends an error if the word is not found")
-    void onMessageNotFoundSendError(@Mock OdmianaBot bot) {
-        message.setText(BAD_WORD);
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(BAD_WORD, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.NOT_FOUND.value()).withBody(readFile("sjp/responses/404.html")));
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/szukaj/podstawowe/wyniki").withQueryStringParameter("szukaj", word), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/not-found.html")));
 
-            message.setText(BAD_WORD);
+            message.setText(word);
             update.setMessage(message);
 
             reply.onMessage(bot, update);
@@ -222,61 +141,60 @@ class DefaultReplyTest {
     }
 
     @Test
-    @DisplayName("Sends an error if SJP returned 200 but no word HTML")
-    void onMessageNotFoundInHTMLSendError(@Mock OdmianaBot bot) {
-        message.setText(VERB);
+    @DisplayName("[Noun] Parses responses from the source and sends an expected message")
+    void onMessageNounWSJP(@Mock OdmianaBot bot) {
+        final String noun = "kobiecie";
+
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(VERB, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody("<html></html>"));
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/szukaj/podstawowe/wyniki").withQueryStringParameter("szukaj", noun), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/search-results.html")));
 
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/3950"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/meanings.html")));
+
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("https://wsjp.pl/haslo/podglad/3950/kobieta/4891319"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/final.html")));
+
+            message.setText(noun);
             reply.onMessage(bot, update);
 
-            verify(bot).send(readFile("telegram/responses/not-found.txt"), update);
+            verify(bot).send(readFile("telegram/responses/noun.success.txt"), update);
         } catch (Exception e) {
             throw new ApplicationRuntimeException(e);
         }
     }
 
     @Test
-    @DisplayName("Sends an error if an error occurred while parsed SJP")
-    void onMessageErrorOccurredWhileRequestingSJPSendError(@Mock OdmianaBot bot) {
-        message.setText(VERB);
+    @DisplayName("[Noun] Parses responses from the source and sends an expected message")
+    void onMessagePluralNounWSJP(@Mock OdmianaBot bot) {
+        final String noun = "drzwiom";
+
         try (
             MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
         ) {
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/" + URLEncoder.encode(VERB, StandardCharsets.UTF_8)), Times.exactly(1))
-                .respond(response().withStatusCode(HttpStatus.SERVICE_UNAVAILABLE.value()).withBody("<html></html>"));
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/szukaj/podstawowe/wyniki").withQueryStringParameter("szukaj", noun), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/plural.search-results.html")));
 
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/4088"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/plural.meanings.html")));
+
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("https://wsjp.pl/haslo/podglad/4088/drzwi/2848197"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/plural.final.html")));
+
+            message.setText(noun);
             reply.onMessage(bot, update);
 
-            verify(bot).send(readFile("telegram/responses/error.txt"), update);
+            verify(bot).send(readFile("telegram/responses/noun.plural.success.txt"), update);
         } catch (Exception e) {
             throw new ApplicationRuntimeException(e);
         }
-    }
-
-    @Test
-    @DisplayName("Sends an error if exception was thrown")
-    void onMessageExceptionSendError(@Mock OdmianaBot bot, @Mock Wikislownik wikislownik, @Mock SJP sjp) throws Exception {
-        message.setText(VERB);
-        when(sjp.get(anyString())).thenThrow(new ApplicationRuntimeException("Test Error!"));
-        new DefaultReply(wikislownik, sjp, historyService).onMessage(bot, update);
-
-        verify(bot).send(readFile("telegram/responses/error.txt"), update);
-    }
-
-    private String readFile(String name) throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        URL url = classLoader.getResource(name);
-
-        if (url == null) {
-            throw new FileNotFoundException("Unable to find '" + name + "' file");
-        }
-
-        return FileUtils.readFileToString(new File(url.getFile()), StandardCharsets.UTF_8);
     }
 }

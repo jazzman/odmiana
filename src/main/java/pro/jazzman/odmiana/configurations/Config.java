@@ -25,10 +25,6 @@ public class Config {
     @Value("${wsjp.url}")
     private String dictionaryUrl;
 
-    // TODO: implement DB cache. If this parameter is true than all requested data is saved in the database to decrease external requests and need to parse
-    @Value("${bot.cache}")
-    private boolean cache;
-
     @Bean
     public LongPollingBot bot(@Value("${TELEGRAM_USERNAME}") String username, @Value("${TELEGRAM_TOKEN}") String token) {
         return new LongPollingBot(username, token);

@@ -11,6 +11,3 @@ wsjp:
 bot:
   owner_id: ${OWNER_ID}
   version: ${VERSION:0.0.0}
-  cache: ${CACHE}
-server:
-  port: ${APPLICATION_PORT}

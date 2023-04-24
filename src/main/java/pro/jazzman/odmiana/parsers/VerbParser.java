@@ -43,18 +43,39 @@ public class VerbParser implements Parser {
     }
 
     private void setPresent() {
-        Table presentTenseTable = table("Czas teraźniejszy", document);
+        Table table = presentTenseTable(document);
 
-        if (presentTenseTable == null) {
+        if (table == null) {
             log.warn("Unable to find a present tense table on the page");
         } else {
-            verb.setSingularPresent1(presentTenseTable.extract(1,0));
-            verb.setSingularPresent2(presentTenseTable.extract(2, 0));
-            verb.setSingularPresent3(presentTenseTable.extract(3, 0));
-            verb.setPluralPresent1(presentTenseTable.extract(1, 1));
-            verb.setPluralPresent2(presentTenseTable.extract(2, 1));
-            verb.setPluralPresent3(presentTenseTable.extract(3, 1));
+            verb.setSingularPresent1(table.extract(1,0));
+            verb.setSingularPresent2(table.extract(2, 0));
+            verb.setSingularPresent3(table.extract(3, 0));
+            verb.setPluralPresent1(table.extract(1, 1));
+            verb.setPluralPresent2(table.extract(2, 1));
+            verb.setPluralPresent3(table.extract(3, 1));
         }
+    }
+
+    private Table presentTenseTable(Document document) {
+        Table table = table("Czas teraźniejszy", document);
+
+        if (table != null) {
+            return table;
+        }
+
+        Element element = document.selectFirst("table.table-striped.fleksja-table.table-bordered");
+
+        if (element != null) {
+            Elements headers = element.select("thead tr th");
+            Elements rows = element.select("tbody tr");
+
+            if (headers.size() == 3 && rows.size() == 3) {
+                return Table.from(element);
+            }
+        }
+
+        return null;
     }
 
     private void setPast() {
@@ -90,7 +111,7 @@ public class VerbParser implements Parser {
     }
 
     private void setFuture() {
-        Table table = table("Czas przyszły", document);
+        Table table = futureTenseTable();
 
         if (table == null) {
             log.warn("Unable to find a future tense table on the page");
@@ -114,6 +135,31 @@ public class VerbParser implements Parser {
         verb.setPluralFutureNonMale1(table.extract(2, 4, "span.forma:eq(0)"));
         verb.setPluralFutureNonMale2(table.extract(3, 4, "span.forma:eq(0)"));
         verb.setPluralFutureNonMale3(table.extract(4, 4, "span.forma:eq(0)"));
+    }
+
+    private Table futureTenseTable() {
+        Element p = document.selectFirst("p:contains(Czas przyszły)");
+
+        if (p != null) {
+            Element parent = p.parent();
+
+            if (parent != null) {
+                Elements children = parent.children();
+
+                Element element = children.get(children.indexOf(p) + 1).selectFirst("table");
+
+                if (element != null) {
+                    Elements headers = element.select("thead tr:eq(1) th");
+                    Elements rows = element.select("tbody tr");
+
+                    if (headers.size() == 5 && rows.size() == 3) {
+                        return Table.from(element);
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     private void setImperative() {

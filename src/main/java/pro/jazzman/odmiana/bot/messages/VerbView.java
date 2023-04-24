@@ -35,6 +35,9 @@ public class VerbView implements View {
         🍏3 os: ${singular.past.neutral.third} | ${plural.past.neutral.third}
         ```
         
+        """;
+
+    private static final String FUTURE_TEMPLATE = """
         ⏰*Czas przyszły* - *liczba pojedyncza*
         ```
         🧔🏼1 os: ${singular.future.male.first}
@@ -61,22 +64,29 @@ public class VerbView implements View {
         🙅🏼‍3 os: ${plural.future.nonmale.third}
         ```
         
+        """;
+
+    private static final String IMPERATIVE_TEMPLATE = """
         📢*Tryb rozkazujący*
         ```
         1 os: ${singular.imperative.placeholder} | ${plural.imperative.first}
         2 os: ${singular.imperative.second} | ${plural.imperative.second}
         ```
         
+        """;
+
+    private static final String ADDITIONAL_TEMPLATE = """
         *Bezosobnik*: `${impersonal}`
         *Gerundium*: `${gerund}`
         *Imiesłów przysłówkowy współczesny*: `${modern.adverbial.participle}`
         *Imiesłów przymiotnikowy czynny*: `${active.participle}`
         *Imiesłów przymiotnikowy bierny*: `${passive.adjective.participle}`
         """;
-
     private Verb verb;
 
     public String render() {
+        String template = TEMPLATE;
+
         var placeholders = new HashMap<String, String>();
         placeholders.put("infinitive", verb.getInfinitive());
         placeholders.put("translation", verb.hasTranslation() ? " - " + verb.getTranslation() : "");
@@ -106,9 +116,6 @@ public class VerbView implements View {
         placeholders.put("singular.past.neutral.second", fixedString(verb.getSingularPastNeutral2(), pastMaxLength));
         placeholders.put("singular.past.neutral.third", fixedString(verb.getSingularPastNeutral3(), pastMaxLength));
 
-        placeholders.put("singular.imperative.placeholder", "-".repeat(verb.getSingularImperative2().length()));
-        placeholders.put("singular.imperative.second", verb.getSingularImperative2());
-
         placeholders.put("plural.past.male.first", verb.getPluralPastMale1());
         placeholders.put("plural.past.male.second", verb.getPluralPastMale2());
         placeholders.put("plural.past.male.third", verb.getPluralPastMale3());
@@ -118,38 +125,54 @@ public class VerbView implements View {
         placeholders.put("plural.past.neutral.first", verb.getPluralPastNeutral1());
         placeholders.put("plural.past.neutral.second", verb.getPluralPastNeutral2());
         placeholders.put("plural.past.neutral.third", verb.getPluralPastNeutral3());
-        placeholders.put("plural.imperative.first", verb.getPluralImperative1());
-        placeholders.put("plural.imperative.second", verb.getPluralImperative2());
 
-        placeholders.put("singular.future.male.first", verb.getSingularFutureMale1());
-        placeholders.put("singular.future.male.second", verb.getSingularFutureMale2());
-        placeholders.put("singular.future.male.third", verb.getSingularFutureMale3());
+        if (verb.getSingularFutureMale1() != null) {
+            placeholders.put("singular.future.male.first", verb.getSingularFutureMale1());
+            placeholders.put("singular.future.male.second", verb.getSingularFutureMale2());
+            placeholders.put("singular.future.male.third", verb.getSingularFutureMale3());
 
-        placeholders.put("singular.future.female.first", verb.getSingularFutureFemale1());
-        placeholders.put("singular.future.female.second", verb.getSingularFutureFemale2());
-        placeholders.put("singular.future.female.third", verb.getSingularFutureFemale3());
+            placeholders.put("singular.future.female.first", verb.getSingularFutureFemale1());
+            placeholders.put("singular.future.female.second", verb.getSingularFutureFemale2());
+            placeholders.put("singular.future.female.third", verb.getSingularFutureFemale3());
 
-        placeholders.put("singular.future.neutral.first", verb.getSingularFutureNeutral1());
-        placeholders.put("singular.future.neutral.second", verb.getSingularFutureNeutral2());
-        placeholders.put("singular.future.neutral.third", verb.getSingularFutureNeutral3());
+            placeholders.put("singular.future.neutral.first", verb.getSingularFutureNeutral1());
+            placeholders.put("singular.future.neutral.second", verb.getSingularFutureNeutral2());
+            placeholders.put("singular.future.neutral.third", verb.getSingularFutureNeutral3());
 
-        placeholders.put("plural.future.male.first", verb.getPluralFutureMale1());
-        placeholders.put("plural.future.male.second", verb.getPluralFutureMale2());
-        placeholders.put("plural.future.male.third", verb.getPluralFutureMale3());
+            placeholders.put("plural.future.male.first", verb.getPluralFutureMale1());
+            placeholders.put("plural.future.male.second", verb.getPluralFutureMale2());
+            placeholders.put("plural.future.male.third", verb.getPluralFutureMale3());
 
-        placeholders.put("plural.future.nonmale.first", verb.getPluralFutureNonMale1());
-        placeholders.put("plural.future.nonmale.second", verb.getPluralFutureNonMale2());
-        placeholders.put("plural.future.nonmale.third", verb.getPluralFutureNonMale3());
+            placeholders.put("plural.future.nonmale.first", verb.getPluralFutureNonMale1());
+            placeholders.put("plural.future.nonmale.second", verb.getPluralFutureNonMale2());
+            placeholders.put("plural.future.nonmale.third", verb.getPluralFutureNonMale3());
 
-        placeholders.put("impersonal", verb.getImpersonal());
-        placeholders.put("gerund", verb.getGerund());
-        placeholders.put("modern.adverbial.participle", verb.getModernAdverbialParticiple());
-        placeholders.put("active.participle", verb.getActiveParticiple());
-        placeholders.put("passive.adjective.participle", verb.getPassiveAdjectiveParticiple());
+            template += FUTURE_TEMPLATE;
+        }
+
+        if (verb.getPluralImperative1() != null) {
+            placeholders.put("singular.imperative.placeholder", "-".repeat(verb.getSingularImperative2().length()));
+            placeholders.put("singular.imperative.second", verb.getSingularImperative2());
+            placeholders.put("plural.imperative.first", verb.getPluralImperative1());
+            placeholders.put("plural.imperative.second", verb.getPluralImperative2());
+
+            template += IMPERATIVE_TEMPLATE;
+        }
+
+        if (verb.getImpersonal() != null) {
+            placeholders.put("impersonal", verb.getImpersonal());
+            placeholders.put("gerund", verb.getGerund());
+            placeholders.put("modern.adverbial.participle", verb.getModernAdverbialParticiple());
+            placeholders.put("active.participle", verb.getActiveParticiple());
+            placeholders.put("passive.adjective.participle", verb.getPassiveAdjectiveParticiple());
+
+            template += ADDITIONAL_TEMPLATE;
+        }
+
 
         placeholders.replaceAll((k, v) -> v != null ? v : "-");
 
-        return StringSubstitutor.replace(TEMPLATE, placeholders);
+        return StringSubstitutor.replace(template, placeholders);
     }
 
     private String fixedString(String word, int length) {

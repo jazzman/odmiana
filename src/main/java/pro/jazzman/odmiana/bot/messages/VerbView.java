@@ -1,15 +1,12 @@
 package pro.jazzman.odmiana.bot.messages;
 
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import pro.jazzman.odmiana.entities.partsofspeech.Verb;
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class VerbView implements View {
+public class VerbView extends View {
     private static final String TEMPLATE = """
         `${infinitive}`${translation}
             
@@ -173,16 +170,5 @@ public class VerbView implements View {
         placeholders.replaceAll((k, v) -> v != null ? v : "-");
 
         return StringSubstitutor.replace(template, placeholders);
-    }
-
-    private String fixedString(String word, int length) {
-        return StringUtils.rightPad(word != null ? word : "", length);
-    }
-
-    private int maxLength(String... words) {
-        return Arrays.stream(words)
-            .filter(Objects::nonNull)
-            .max(Comparator.comparing(String::length))
-            .map(String::length).orElse(0);
     }
 }

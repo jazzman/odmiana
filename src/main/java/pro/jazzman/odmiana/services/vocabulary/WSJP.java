@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pro.jazzman.odmiana.entities.partsofspeech.Word;
+import pro.jazzman.odmiana.parsers.AdjectiveParser;
 import pro.jazzman.odmiana.parsers.NounParser;
 import pro.jazzman.odmiana.parsers.Parser;
 import pro.jazzman.odmiana.parsers.VerbParser;
@@ -62,6 +63,7 @@ public class WSJP {
         return switch (partOfSpeech) {
             case "czasownik" -> new VerbParser(document);
             case "rzeczownik" -> new NounParser(document);
+            case "przymiotnik" -> new AdjectiveParser(document);
             default -> throw new IOException("Cannot choose appropriate parser for the part of speech: " + partOfSpeech);
         };
     }

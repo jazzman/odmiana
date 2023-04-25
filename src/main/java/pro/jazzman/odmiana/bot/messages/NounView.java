@@ -1,7 +1,6 @@
 package pro.jazzman.odmiana.bot.messages;
 
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import pro.jazzman.odmiana.entities.partsofspeech.Noun;
 import pro.jazzman.odmiana.entities.partsofspeech.NounType;
@@ -9,7 +8,7 @@ import pro.jazzman.odmiana.entities.partsofspeech.NounType;
 import java.util.*;
 
 @AllArgsConstructor
-public class NounView implements View {
+public class NounView extends View {
     private static final String HEADER = """
         `${base}`${translation}
         
@@ -65,25 +64,6 @@ public class NounView implements View {
         }
 
         return StringSubstitutor.replace(template, placeholders);
-    }
-
-    private String fixedString(String word, int length) {
-        if (word != null && !word.isBlank()) {
-            return StringUtils.rightPad(word, length);
-        }
-
-        return "-".repeat(length);
-    }
-
-    private int maxLength(String... words) {
-        return Arrays.stream(words)
-            .filter(Objects::nonNull)
-            .max(Comparator.comparing(String::length))
-            .map(String::length).orElse(5);
-    }
-
-    private int maxLength(List<String> words) {
-        return maxLength(words.toArray(new String[0]));
     }
 
     private String emoji(NounType type) {

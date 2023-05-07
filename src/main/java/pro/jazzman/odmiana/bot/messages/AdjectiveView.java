@@ -1,178 +1,204 @@
 package pro.jazzman.odmiana.bot.messages;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringSubstitutor;
 import pro.jazzman.odmiana.entities.partsofspeech.Adjective;
 
 import java.util.*;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdjectiveView extends View {
     private static final String HEADER = """
-        `${base}`${translation}
+        `${base}`
         
         *Część mowy*: przymiotnik
         
+        """;
+
+    private static final String MASCULINE = """
         *Stopień równy*
         
-        """;
-
-    private static final String STOPIEN_ROWNY_MESKOOSOBOWY = """
         *🧔🏼Osoby i 🐱Zwierzęta* | *🙎🏼‍Męskoosobowy*
         ```
-        M: ${singular.mianownik.male} | ${plural.mianownik.male}
-        D: ${singular.dopelniacz.male} | ${plural.dopelniacz.male}
-        C: ${singular.celownik.male} | ${plural.celownik.male}
-        B: ${singular.biernik.male} | ${plural.biernik.male}
-        N: ${singular.narzednik.male} | ${plural.narzednik.male}
-        M: ${singular.miejscownik.male} | ${plural.miejscownik.male}
-        W: ${singular.wolacz.male} | ${plural.wolacz.male}
+        M: ${pojedyncza.męskoosobowy.mianownik} | ${mnoga.męskoosobowy.mianownik}
+        D: ${pojedyncza.męskoosobowy.dopelniacz} | ${mnoga.męskoosobowy.dopelniacz}
+        C: ${pojedyncza.męskoosobowy.celownik} | ${mnoga.męskoosobowy.celownik}
+        B: ${pojedyncza.męskoosobowy.biernik} | ${mnoga.męskoosobowy.biernik}
+        N: ${pojedyncza.męskoosobowy.narzędnik} | ${mnoga.męskoosobowy.narzędnik}
+        M: ${pojedyncza.męskoosobowy.miejscownik} | ${mnoga.męskoosobowy.miejscownik}
+        W: ${pojedyncza.męskoosobowy.wolacz} | ${mnoga.męskoosobowy.wolacz}
         ```
         
         """;
 
-    private static final String STOPIEN_ROWNY_MESKORZECZOWY = """
+    private static final String MASCULINE_INANIMATE = """
         *🏠Rzeczy* | *🙎🏼‍Męskoosobowy*
         ```
-        M: ${singular.mianownik.male.notalive} | ${plural.mianownik.male}
-        D: ${singular.dopelniacz.male.notalive} | ${plural.dopelniacz.male}
-        C: ${singular.celownik.male.notalive} | ${plural.celownik.male}
-        B: ${singular.biernik.male.notalive} | ${plural.biernik.male}
-        N: ${singular.narzednik.male.notalive} | ${plural.narzednik.male}
-        M: ${singular.miejscownik.male.notalive} | ${plural.miejscownik.male}
-        W: ${singular.wolacz.male.notalive} | ${plural.wolacz.male}
+        M: ${pojedyncza.męskorzeczowy.mianownik} | ${mnoga.męskoosobowy.mianownik}
+        D: ${pojedyncza.męskorzeczowy.dopelniacz} | ${mnoga.męskoosobowy.dopelniacz}
+        C: ${pojedyncza.męskorzeczowy.celownik} | ${mnoga.męskoosobowy.celownik}
+        B: ${pojedyncza.męskorzeczowy.biernik} | ${mnoga.męskoosobowy.biernik}
+        N: ${pojedyncza.męskorzeczowy.narzędnik} | ${mnoga.męskoosobowy.narzędnik}
+        M: ${pojedyncza.męskorzeczowy.miejscownik} | ${mnoga.męskoosobowy.miejscownik}
+        W: ${pojedyncza.męskorzeczowy.wolacz} | ${mnoga.męskoosobowy.wolacz}
         ```
         
         """;
 
-    private static final String STOPIEN_ROWNY_ZENSKI = """
+    private static final String FEMININE = """
         *👩🏼Żeński* | *🙅🏼‍Niemęskoosobowy*
         ```
-        M: ${singular.mianownik.female} | ${plural.mianownik.nonmale}
-        D: ${singular.dopelniacz.female} | ${plural.dopelniacz.nonmale}
-        C: ${singular.celownik.female} | ${plural.celownik.nonmale}
-        B: ${singular.biernik.female} | ${plural.biernik.nonmale}
-        N: ${singular.narzednik.female} | ${plural.narzednik.nonmale}
-        M: ${singular.miejscownik.female} | ${plural.miejscownik.nonmale}
-        W: ${singular.wolacz.female} | ${plural.wolacz.nonmale}
+        M: ${pojedyncza.żeński.mianownik} | ${mnoga.niemęskoosobowy.mianownik}
+        D: ${pojedyncza.żeński.dopelniacz} | ${mnoga.niemęskoosobowy.dopelniacz}
+        C: ${pojedyncza.żeński.celownik} | ${mnoga.niemęskoosobowy.celownik}
+        B: ${pojedyncza.żeński.biernik} | ${mnoga.niemęskoosobowy.biernik}
+        N: ${pojedyncza.żeński.narzędnik} | ${mnoga.niemęskoosobowy.narzędnik}
+        M: ${pojedyncza.żeński.miejscownik} | ${mnoga.niemęskoosobowy.miejscownik}
+        W: ${pojedyncza.żeński.wolacz} | ${mnoga.niemęskoosobowy.wolacz}
         ```
         
         """;
 
-    private static final String STOPIEN_ROWNY_NIJAKI = """
+    private static final String NEUTER = """
         *🍏Nijaki* | *🙅🏼‍Niemęskoosobowy*
         ```
-        M: ${singular.mianownik.neutral} | ${plural.mianownik.nonmale}
-        D: ${singular.dopelniacz.neutral} | ${plural.dopelniacz.nonmale}
-        C: ${singular.celownik.neutral} | ${plural.celownik.nonmale}
-        B: ${singular.biernik.neutral} | ${plural.biernik.nonmale}
-        N: ${singular.narzednik.neutral} | ${plural.narzednik.nonmale}
-        M: ${singular.miejscownik.neutral} | ${plural.miejscownik.nonmale}
-        W: ${singular.wolacz.neutral} | ${plural.wolacz.nonmale}
+        M: ${pojedyncza.nijaki.mianownik} | ${mnoga.niemęskoosobowy.mianownik}
+        D: ${pojedyncza.nijaki.dopelniacz} | ${mnoga.niemęskoosobowy.dopelniacz}
+        C: ${pojedyncza.nijaki.celownik} | ${mnoga.niemęskoosobowy.celownik}
+        B: ${pojedyncza.nijaki.biernik} | ${mnoga.niemęskoosobowy.biernik}
+        N: ${pojedyncza.nijaki.narzędnik} | ${mnoga.niemęskoosobowy.narzędnik}
+        M: ${pojedyncza.nijaki.miejscownik} | ${mnoga.niemęskoosobowy.miejscownik}
+        W: ${pojedyncza.nijaki.wolacz} | ${mnoga.niemęskoosobowy.wolacz}
         ```
         
         """;
 
-    private Adjective adjective;
+    private static final String COMPARATIVE_MASCULINE = """
+        *Stopień wyższy*
+        
+        *🧔🏼Osoby i 🐱Zwierzęta* | *🙎🏼‍Męskoosobowy*
+        ```
+        M: ${wyższy.pojedyncza.męskoosobowy.mianownik} | ${wyższy.mnoga.męskoosobowy.mianownik}
+        D: ${wyższy.pojedyncza.męskoosobowy.dopelniacz} | ${wyższy.mnoga.męskoosobowy.dopelniacz}
+        C: ${wyższy.pojedyncza.męskoosobowy.celownik} | ${wyższy.mnoga.męskoosobowy.celownik}
+        B: ${wyższy.pojedyncza.męskoosobowy.biernik} | ${wyższy.mnoga.męskoosobowy.biernik}
+        N: ${wyższy.pojedyncza.męskoosobowy.narzędnik} | ${wyższy.mnoga.męskoosobowy.narzędnik}
+        M: ${wyższy.pojedyncza.męskoosobowy.miejscownik} | ${wyższy.mnoga.męskoosobowy.miejscownik}
+        ```
+        
+        """;
+
+    private static final String COMPARATIVE_MASCULINE_INANIMATE = """
+        *🏠Rzeczy* | *🙎🏼‍Męskoosobowy*
+        ```
+        M: ${wyższy.pojedyncza.męskorzeczowy.mianownik} | ${wyższy.mnoga.męskoosobowy.mianownik}
+        D: ${wyższy.pojedyncza.męskorzeczowy.dopelniacz} | ${wyższy.mnoga.męskoosobowy.dopelniacz}
+        C: ${wyższy.pojedyncza.męskorzeczowy.celownik} | ${wyższy.mnoga.męskoosobowy.celownik}
+        B: ${wyższy.pojedyncza.męskorzeczowy.biernik} | ${wyższy.mnoga.męskoosobowy.biernik}
+        N: ${wyższy.pojedyncza.męskorzeczowy.narzędnik} | ${wyższy.mnoga.męskoosobowy.narzędnik}
+        M: ${wyższy.pojedyncza.męskorzeczowy.miejscownik} | ${wyższy.mnoga.męskoosobowy.miejscownik}
+        ```
+        
+        """;
+
+    private static final String COMPARATIVE_FEMININE = """
+        *👩🏼Żeński* | *🙅🏼‍Niemęskoosobowy*
+        ```
+        M: ${wyższy.pojedyncza.żeński.mianownik} | ${wyższy.mnoga.niemęskoosobowy.mianownik}
+        D: ${wyższy.pojedyncza.żeński.dopelniacz} | ${wyższy.mnoga.niemęskoosobowy.dopelniacz}
+        C: ${wyższy.pojedyncza.żeński.celownik} | ${wyższy.mnoga.niemęskoosobowy.celownik}
+        B: ${wyższy.pojedyncza.żeński.biernik} | ${wyższy.mnoga.niemęskoosobowy.biernik}
+        N: ${wyższy.pojedyncza.żeński.narzędnik} | ${wyższy.mnoga.niemęskoosobowy.narzędnik}
+        M: ${wyższy.pojedyncza.żeński.miejscownik} | ${wyższy.mnoga.niemęskoosobowy.miejscownik}
+        ```
+        
+        """;
+
+    private static final String COMPARATIVE_NEUTER = """
+        *🍏Nijaki* | *🙅🏼‍Niemęskoosobowy*
+        ```
+        M: ${wyższy.pojedyncza.nijaki.mianownik} | ${wyższy.mnoga.niemęskoosobowy.mianownik}
+        D: ${wyższy.pojedyncza.nijaki.dopelniacz} | ${wyższy.mnoga.niemęskoosobowy.dopelniacz}
+        C: ${wyższy.pojedyncza.nijaki.celownik} | ${wyższy.mnoga.niemęskoosobowy.celownik}
+        B: ${wyższy.pojedyncza.nijaki.biernik} | ${wyższy.mnoga.niemęskoosobowy.biernik}
+        N: ${wyższy.pojedyncza.nijaki.narzędnik} | ${wyższy.mnoga.niemęskoosobowy.narzędnik}
+        M: ${wyższy.pojedyncza.nijaki.miejscownik} | ${wyższy.mnoga.niemęskoosobowy.miejscownik}
+        ```
+        
+        """;
+
+    private final Adjective adjective;
+    private final Map<String, String> placeholders = new HashMap<>();
 
     public String render() {
         String template = HEADER;
 
-        var placeholders = new HashMap<String, String>();
-
         placeholders.put("base", adjective.getBase());
-        placeholders.put("translation", adjective.hasTranslation() ? " - " + adjective.getTranslation() : "");
 
-        if (adjective.getSingularMaleMianownik() != null) {
-            template += STOPIEN_ROWNY_MESKOOSOBOWY;
+        Map<String, String> masculine = adjective.get("pojedyncza.męskoosobowy");
+        Map<String, String> masculineInanimate = adjective.get("pojedyncza.męskorzeczowy");
+        Map<String, String> feminine = adjective.get("pojedyncza.żeński");
+        Map<String, String> neuter = adjective.get("pojedyncza.nijaki");
 
-            int maxLength = maxLength(
-                adjective.getSingularMaleMianownik(), adjective.getSingularMaleDopelniacz(), adjective.getSingularMaleCelownik(),
-                adjective.getSingularMaleBiernik(), adjective.getSingularMaleNarzednik(), adjective.getSingularMaleMiejscownik(),
-                adjective.getSingularMaleWolacz()
-            );
+        placeholders.putAll(adjective.get("mnoga.męskoosobowy"));
+        placeholders.putAll(adjective.get("mnoga.niemęskoosobowy"));
 
-            placeholders.put("singular.mianownik.male", fixedString(adjective.getSingularMaleMianownik(), maxLength));
-            placeholders.put("singular.dopelniacz.male", fixedString(adjective.getSingularMaleDopelniacz(), maxLength));
-            placeholders.put("singular.celownik.male", fixedString(adjective.getSingularMaleCelownik(), maxLength));
-            placeholders.put("singular.biernik.male", fixedString(adjective.getSingularMaleBiernik(), maxLength));
-            placeholders.put("singular.narzednik.male", fixedString(adjective.getSingularMaleNarzednik(), maxLength));
-            placeholders.put("singular.miejscownik.male", fixedString(adjective.getSingularMaleMiejscownik(), maxLength));
-            placeholders.put("singular.wolacz.male", fixedString(adjective.getSingularMaleWolacz(), maxLength));
+        Map<String, String> comparativeMasculine = adjective.get("wyższy.pojedyncza.męskoosobowy");
+        Map<String, String> comparativeMasculineInanimate = adjective.get("wyższy.pojedyncza.męskorzeczowy");
+        Map<String, String> comparativeFeminine = adjective.get("wyższy.pojedyncza.żeński");
+        Map<String, String> comparativeNeuter = adjective.get("wyższy.pojedyncza.nijaki");
 
-            placeholders.put("plural.mianownik.male", adjective.getPluralMaleMianownik());
-            placeholders.put("plural.dopelniacz.male", adjective.getPluralMaleDopelniacz());
-            placeholders.put("plural.celownik.male", adjective.getPluralMaleCelownik());
-            placeholders.put("plural.biernik.male", adjective.getPluralMaleBiernik());
-            placeholders.put("plural.narzednik.male", adjective.getPluralMaleNarzednik());
-            placeholders.put("plural.miejscownik.male", adjective.getPluralMaleMiejscownik());
-            placeholders.put("plural.wolacz.male", adjective.getPluralMaleWolacz());
+        placeholders.putAll(adjective.get("wyższy.mnoga.męskoosobowy"));
+        placeholders.putAll(adjective.get("wyższy.mnoga.niemęskoosobowy"));
+
+        if (!masculine.isEmpty()) {
+            template += MASCULINE;
+            addForms(masculine);
         }
 
-        if (adjective.getSingularMaleNotAliveMianownik() != null) {
-            template += STOPIEN_ROWNY_MESKORZECZOWY;
-
-            int maxLength = maxLength(
-                adjective.getSingularMaleNotAliveMianownik(), adjective.getSingularMaleNotAliveDopelniacz(), adjective.getSingularMaleNotAliveCelownik(),
-                adjective.getSingularMaleNotAliveBiernik(), adjective.getSingularMaleNotAliveNarzednik(), adjective.getSingularMaleNotAliveMiejscownik(),
-                adjective.getSingularMaleNotAliveWolacz()
-            );
-
-            placeholders.put("singular.mianownik.male.notalive", fixedString(adjective.getSingularMaleNotAliveMianownik(), maxLength));
-            placeholders.put("singular.dopelniacz.male.notalive", fixedString(adjective.getSingularMaleNotAliveDopelniacz(), maxLength));
-            placeholders.put("singular.celownik.male.notalive", fixedString(adjective.getSingularMaleNotAliveCelownik(), maxLength));
-            placeholders.put("singular.biernik.male.notalive", fixedString(adjective.getSingularMaleNotAliveBiernik(), maxLength));
-            placeholders.put("singular.narzednik.male.notalive", fixedString(adjective.getSingularMaleNotAliveNarzednik(), maxLength));
-            placeholders.put("singular.miejscownik.male.notalive", fixedString(adjective.getSingularMaleNotAliveMiejscownik(), maxLength));
-            placeholders.put("singular.wolacz.male.notalive", fixedString(adjective.getSingularMaleNotAliveWolacz(), maxLength));
+        if (!masculineInanimate.isEmpty()) {
+            template += MASCULINE_INANIMATE;
+            addForms(masculineInanimate);
         }
 
-        if (adjective.getSingularFemaleMianownik() != null) {
-            template += STOPIEN_ROWNY_ZENSKI;
-
-            int maxLength = maxLength(
-                adjective.getSingularFemaleMianownik(), adjective.getSingularFemaleDopelniacz(), adjective.getSingularFemaleCelownik(),
-                adjective.getSingularFemaleBiernik(), adjective.getSingularFemaleNarzednik(), adjective.getSingularFemaleMiejscownik(),
-                adjective.getSingularFemaleWolacz()
-            );
-
-            placeholders.put("singular.mianownik.female", fixedString(adjective.getSingularFemaleMianownik(), maxLength));
-            placeholders.put("singular.dopelniacz.female", fixedString(adjective.getSingularFemaleDopelniacz(), maxLength));
-            placeholders.put("singular.celownik.female", fixedString(adjective.getSingularFemaleCelownik(), maxLength));
-            placeholders.put("singular.biernik.female", fixedString(adjective.getSingularFemaleBiernik(), maxLength));
-            placeholders.put("singular.narzednik.female", fixedString(adjective.getSingularFemaleNarzednik(), maxLength));
-            placeholders.put("singular.miejscownik.female", fixedString(adjective.getSingularFemaleMiejscownik(), maxLength));
-            placeholders.put("singular.wolacz.female", fixedString(adjective.getSingularFemaleWolacz(), maxLength));
-
-            placeholders.put("plural.mianownik.nonmale", adjective.getPluralNonMaleMianownik());
-            placeholders.put("plural.dopelniacz.nonmale", adjective.getPluralNonMaleDopelniacz());
-            placeholders.put("plural.celownik.nonmale", adjective.getPluralNonMaleCelownik());
-            placeholders.put("plural.biernik.nonmale", adjective.getPluralNonMaleBiernik());
-            placeholders.put("plural.narzednik.nonmale", adjective.getPluralNonMaleNarzednik());
-            placeholders.put("plural.miejscownik.nonmale", adjective.getPluralNonMaleMiejscownik());
-            placeholders.put("plural.wolacz.nonmale", adjective.getPluralNonMaleWolacz());
+        if (!feminine.isEmpty()) {
+            template += FEMININE;
+            addForms(feminine);
         }
 
-        if (adjective.getSingularFemaleMianownik() != null) {
-            template += STOPIEN_ROWNY_NIJAKI;
+        if (!neuter.isEmpty()) {
+            template += NEUTER;
+            addForms(neuter);
+        }
 
-            int maxLength = maxLength(
-                adjective.getSingularNeutralMianownik(), adjective.getSingularNeutralDopelniacz(), adjective.getSingularNeutralCelownik(),
-                adjective.getSingularNeutralBiernik(), adjective.getSingularNeutralNarzednik(), adjective.getSingularNeutralMiejscownik(),
-                adjective.getSingularNeutralWolacz()
-            );
+        if (!comparativeMasculine.isEmpty()) {
+            template += COMPARATIVE_MASCULINE;
+            addForms(comparativeMasculine);
+        }
 
-            placeholders.put("singular.mianownik.neutral", fixedString(adjective.getSingularNeutralMianownik(), maxLength));
-            placeholders.put("singular.dopelniacz.neutral", fixedString(adjective.getSingularNeutralDopelniacz(), maxLength));
-            placeholders.put("singular.celownik.neutral", fixedString(adjective.getSingularNeutralCelownik(), maxLength));
-            placeholders.put("singular.biernik.neutral", fixedString(adjective.getSingularNeutralBiernik(), maxLength));
-            placeholders.put("singular.narzednik.neutral", fixedString(adjective.getSingularNeutralNarzednik(), maxLength));
-            placeholders.put("singular.miejscownik.neutral", fixedString(adjective.getSingularNeutralMiejscownik(), maxLength));
-            placeholders.put("singular.wolacz.neutral", fixedString(adjective.getSingularNeutralWolacz(), maxLength));
+        if (!comparativeMasculineInanimate.isEmpty()) {
+            template += COMPARATIVE_MASCULINE_INANIMATE;
+            addForms(comparativeMasculineInanimate);
+        }
+
+        if (!comparativeFeminine.isEmpty()) {
+            template += COMPARATIVE_FEMININE;
+            addForms(comparativeFeminine);
+        }
+
+        if (!comparativeNeuter.isEmpty()) {
+            template += COMPARATIVE_NEUTER;
+            addForms(comparativeNeuter);
         }
 
         placeholders.replaceAll((k, v) -> v != null ? v : "-");
 
         return StringSubstitutor.replace(template, placeholders);
+    }
+
+    private void addForms(Map<String, String> forms) {
+        int length = maxLength(forms.values().stream().toList());
+        forms.forEach((key, value) -> placeholders.put(key, fixedString(value, length)));
     }
 }

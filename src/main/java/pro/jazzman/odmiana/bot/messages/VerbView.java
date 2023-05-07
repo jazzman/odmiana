@@ -8,28 +8,30 @@ import java.util.*;
 @AllArgsConstructor
 public class VerbView extends View {
     private static final String TEMPLATE = """
-        `${infinitive}`${translation}
+        `${infinitive}`
+        
+        *Część mowy*: czasownik
             
         ⏰*Czas teraźniejszy* - *liczba pojedyncza* | *mnoga*
         ```
-        1 os: ${singular.present.first} | ${plural.present.first}
-        2 os: ${singular.present.second} | ${plural.present.second}
-        3 os: ${singular.present.third} | ${plural.present.third}
+        1 os: ${pojedyncza.teraźniejszy.first} | ${mnoga.teraźniejszy.first}
+        2 os: ${pojedyncza.teraźniejszy.second} | ${mnoga.teraźniejszy.second}
+        3 os: ${pojedyncza.teraźniejszy.third} | ${mnoga.teraźniejszy.third}
         ```
         
         ⏰*Czas przeszły* - *liczba pojedyncza* | *mnoga*
         ```
-        🧔🏼1 os: ${singular.past.male.first} | ${plural.past.male.first}
-        🧔🏼‍2 os: ${singular.past.male.second} | ${plural.past.male.second}
-        🧔🏼3 os: ${singular.past.male.third} | ${plural.past.male.third}
+        🧔🏼1 os: ${pojedyncza.przeszły.męski.first} | ${mnoga.przeszły.męski.first}
+        🧔🏼‍2 os: ${pojedyncza.przeszły.męski.second} | ${mnoga.przeszły.męski.second}
+        🧔🏼3 os: ${pojedyncza.przeszły.męski.third} | ${mnoga.przeszły.męski.third}
             
-        👩🏼1 os: ${singular.past.female.first} | ${plural.past.female.first}
-        👩🏼2 os: ${singular.past.female.second} | ${plural.past.female.second}
-        👩🏼3 os: ${singular.past.female.third} | ${plural.past.female.third}
+        👩🏼1 os: ${pojedyncza.przeszły.żeński.first} | ${mnoga.przeszły.żeński.first}
+        👩🏼2 os: ${pojedyncza.przeszły.żeński.second} | ${mnoga.przeszły.żeński.second}
+        👩🏼3 os: ${pojedyncza.przeszły.żeński.third} | ${mnoga.przeszły.żeński.third}
             
-        🍏1 os: ${singular.past.neutral.first} | ${plural.past.neutral.first}
-        🍏2 os: ${singular.past.neutral.second} | ${plural.past.neutral.second}
-        🍏3 os: ${singular.past.neutral.third} | ${plural.past.neutral.third}
+        🍏1 os: ${pojedyncza.przeszły.nijaki.first} | ${mnoga.przeszły.nijaki.first}
+        🍏2 os: ${pojedyncza.przeszły.nijaki.second} | ${mnoga.przeszły.nijaki.second}
+        🍏3 os: ${pojedyncza.przeszły.nijaki.third} | ${mnoga.przeszły.nijaki.third}
         ```
         
         """;
@@ -37,28 +39,28 @@ public class VerbView extends View {
     private static final String FUTURE_TEMPLATE = """
         ⏰*Czas przyszły* - *liczba pojedyncza*
         ```
-        🧔🏼1 os: ${singular.future.male.first}
-        🧔🏼‍2 os: ${singular.future.male.second}
-        🧔🏼3 os: ${singular.future.male.third}
+        🧔🏼1 os: ${pojedyncza.przyszły.męski.first}
+        🧔🏼‍2 os: ${pojedyncza.przyszły.męski.second}
+        🧔🏼3 os: ${pojedyncza.przyszły.męski.third}
         
-        👩🏼1 os: ${singular.future.female.first}
-        👩🏼2 os: ${singular.future.female.second}
-        👩🏼3 os: ${singular.future.female.third}
+        👩🏼1 os: ${pojedyncza.przyszły.żeński.first}
+        👩🏼2 os: ${pojedyncza.przyszły.żeński.second}
+        👩🏼3 os: ${pojedyncza.przyszły.żeński.third}
         
-        🍏1 os: ${singular.future.neutral.first}
-        🍏2 os: ${singular.future.neutral.second}
-        🍏3 os: ${singular.future.neutral.third}
+        🍏1 os: ${pojedyncza.przyszły.nijaki.first}
+        🍏2 os: ${pojedyncza.przyszły.nijaki.second}
+        🍏3 os: ${pojedyncza.przyszły.nijaki.third}
         ```
         
         ⏰*Czas przyszły* - *liczba mnoga*
         ```
-        🙎🏼‍1 os: ${plural.future.male.first}
-        🙎🏼‍2 os: ${plural.future.male.second}
-        🙎🏼‍3 os: ${plural.future.male.third}
+        🙎🏼‍1 os: ${mnoga.przyszły.męskoosobowy.first}
+        🙎🏼‍2 os: ${mnoga.przyszły.męskoosobowy.second}
+        🙎🏼‍3 os: ${mnoga.przyszły.męskoosobowy.third}
         
-        🙅🏼‍1 os: ${plural.future.nonmale.first}
-        🙅🏼‍2 os: ${plural.future.nonmale.second}
-        🙅🏼‍3 os: ${plural.future.nonmale.third}
+        🙅🏼‍1 os: ${mnoga.przyszły.niemęskoosobowy.first}
+        🙅🏼‍2 os: ${mnoga.przyszły.niemęskoosobowy.second}
+        🙅🏼‍3 os: ${mnoga.przyszły.niemęskoosobowy.third}
         ```
         
         """;
@@ -66,19 +68,12 @@ public class VerbView extends View {
     private static final String IMPERATIVE_TEMPLATE = """
         📢*Tryb rozkazujący*
         ```
-        1 os: ${singular.imperative.placeholder} | ${plural.imperative.first}
-        2 os: ${singular.imperative.second} | ${plural.imperative.second}
+        1 os: ${pojedyncza.rozkazujący.placeholder} | ${mnoga.rozkazujący.first}
+        2 os: ${pojedyncza.rozkazujący.second} | ${mnoga.rozkazujący.second}
         ```
         
         """;
 
-    private static final String ADDITIONAL_TEMPLATE = """
-        *Bezosobnik*: `${impersonal}`
-        *Gerundium*: `${gerund}`
-        *Imiesłów przysłówkowy współczesny*: `${modern.adverbial.participle}`
-        *Imiesłów przymiotnikowy czynny*: `${active.participle}`
-        *Imiesłów przymiotnikowy bierny*: `${passive.adjective.participle}`
-        """;
     private Verb verb;
 
     public String render() {
@@ -86,86 +81,65 @@ public class VerbView extends View {
 
         var placeholders = new HashMap<String, String>();
         placeholders.put("infinitive", verb.getInfinitive());
-        placeholders.put("translation", verb.hasTranslation() ? " - " + verb.getTranslation() : "");
 
-        int presentMaxLength = maxLength(verb.getSingularPresent1(), verb.getSingularPresent2(), verb.getSingularPresent3());
+        Map<String, String> presentSingular = verb.get("pojedyncza.teraźniejszy");
 
-        placeholders.put("singular.present.first", fixedString(verb.getSingularPresent1(), presentMaxLength));
-        placeholders.put("singular.present.second", fixedString(verb.getSingularPresent2(), presentMaxLength));
-        placeholders.put("singular.present.third", fixedString(verb.getSingularPresent3(), presentMaxLength));
-        placeholders.put("plural.present.first", verb.getPluralPresent1());
-        placeholders.put("plural.present.second", verb.getPluralPresent2());
-        placeholders.put("plural.present.third", verb.getPluralPresent3());
+        if (!presentSingular.isEmpty()) {
+            int length = maxLength(presentSingular.values().stream().toList());
+            presentSingular.forEach((key, value) -> placeholders.put(key, fixedString(value, length)));
+        }
 
-        int pastMaxLength = maxLength(
-            verb.getSingularPastMale1(), verb.getSingularPastMale2(), verb.getSingularPastMale3(),
-            verb.getSingularPastFemale1(), verb.getSingularPastFemale2(), verb.getSingularPastFemale3(),
-            verb.getSingularPastNeutral1(), verb.getSingularPastNeutral2(), verb.getSingularPastNeutral3()
-        );
+        placeholders.putAll(verb.get("mnoga.teraźniejszy"));
 
-        placeholders.put("singular.past.male.first", fixedString(verb.getSingularPastMale1(), pastMaxLength));
-        placeholders.put("singular.past.male.second", fixedString(verb.getSingularPastMale2(), pastMaxLength));
-        placeholders.put("singular.past.male.third", fixedString(verb.getSingularPastMale3(), pastMaxLength));
-        placeholders.put("singular.past.female.first", fixedString(verb.getSingularPastFemale1(), pastMaxLength));
-        placeholders.put("singular.past.female.second", fixedString(verb.getSingularPastFemale2(), pastMaxLength));
-        placeholders.put("singular.past.female.third", fixedString(verb.getSingularPastFemale3(), pastMaxLength));
-        placeholders.put("singular.past.neutral.first", fixedString(verb.getSingularPastNeutral1(), pastMaxLength));
-        placeholders.put("singular.past.neutral.second", fixedString(verb.getSingularPastNeutral2(), pastMaxLength));
-        placeholders.put("singular.past.neutral.third", fixedString(verb.getSingularPastNeutral3(), pastMaxLength));
+        Map<String, String> pastSingular = verb.get("pojedyncza.przeszły");
 
-        placeholders.put("plural.past.male.first", verb.getPluralPastMale1());
-        placeholders.put("plural.past.male.second", verb.getPluralPastMale2());
-        placeholders.put("plural.past.male.third", verb.getPluralPastMale3());
-        placeholders.put("plural.past.female.first", verb.getPluralPastFemale1());
-        placeholders.put("plural.past.female.second", verb.getPluralPastFemale2());
-        placeholders.put("plural.past.female.third", verb.getPluralPastFemale3());
-        placeholders.put("plural.past.neutral.first", verb.getPluralPastNeutral1());
-        placeholders.put("plural.past.neutral.second", verb.getPluralPastNeutral2());
-        placeholders.put("plural.past.neutral.third", verb.getPluralPastNeutral3());
+        if (!pastSingular.isEmpty()) {
+            int length = maxLength(pastSingular.values().stream().toList());
+            pastSingular.forEach((key, value) -> placeholders.put(key, fixedString(value, length)));
+        }
 
-        if (verb.getSingularFutureMale1() != null) {
-            placeholders.put("singular.future.male.first", verb.getSingularFutureMale1());
-            placeholders.put("singular.future.male.second", verb.getSingularFutureMale2());
-            placeholders.put("singular.future.male.third", verb.getSingularFutureMale3());
+        placeholders.putAll(verb.get("mnoga.przeszły"));
 
-            placeholders.put("singular.future.female.first", verb.getSingularFutureFemale1());
-            placeholders.put("singular.future.female.second", verb.getSingularFutureFemale2());
-            placeholders.put("singular.future.female.third", verb.getSingularFutureFemale3());
+        Map<String, String> futureSingular = verb.get("pojedyncza.przyszły");
 
-            placeholders.put("singular.future.neutral.first", verb.getSingularFutureNeutral1());
-            placeholders.put("singular.future.neutral.second", verb.getSingularFutureNeutral2());
-            placeholders.put("singular.future.neutral.third", verb.getSingularFutureNeutral3());
-
-            placeholders.put("plural.future.male.first", verb.getPluralFutureMale1());
-            placeholders.put("plural.future.male.second", verb.getPluralFutureMale2());
-            placeholders.put("plural.future.male.third", verb.getPluralFutureMale3());
-
-            placeholders.put("plural.future.nonmale.first", verb.getPluralFutureNonMale1());
-            placeholders.put("plural.future.nonmale.second", verb.getPluralFutureNonMale2());
-            placeholders.put("plural.future.nonmale.third", verb.getPluralFutureNonMale3());
-
+        if (!futureSingular.isEmpty()) {
             template += FUTURE_TEMPLATE;
+            placeholders.putAll(verb.get("pojedyncza.przyszły"));
+            placeholders.putAll(verb.get("mnoga.przyszły"));
         }
 
-        if (verb.getPluralImperative1() != null) {
-            placeholders.put("singular.imperative.placeholder", "-".repeat(verb.getSingularImperative2().length()));
-            placeholders.put("singular.imperative.second", verb.getSingularImperative2());
-            placeholders.put("plural.imperative.first", verb.getPluralImperative1());
-            placeholders.put("plural.imperative.second", verb.getPluralImperative2());
 
+        Map<String, String> singularImperative = verb.get("pojedyncza.rozkazujący");
+        Map<String, String> pluralImperative = verb.get("mnoga.rozkazujący");
+
+        if (!singularImperative.isEmpty() && !pluralImperative.isEmpty()) {
             template += IMPERATIVE_TEMPLATE;
+            int length = verb.getForms().get("pojedyncza.rozkazujący.second").length();
+
+            placeholders.put("pojedyncza.rozkazujący.placeholder", "-".repeat(length));
+            placeholders.put("pojedyncza.rozkazujący.second", verb.getForms().get("pojedyncza.rozkazujący.second"));
+            placeholders.putAll(pluralImperative);
         }
 
-        if (verb.getImpersonal() != null) {
-            placeholders.put("impersonal", verb.getImpersonal());
-            placeholders.put("gerund", verb.getGerund());
-            placeholders.put("modern.adverbial.participle", verb.getModernAdverbialParticiple());
-            placeholders.put("active.participle", verb.getActiveParticiple());
-            placeholders.put("passive.adjective.participle", verb.getPassiveAdjectiveParticiple());
-
-            template += ADDITIONAL_TEMPLATE;
+        if (verb.getForms().containsKey("bezosobnik")) {
+            template += "*Bezosobnik*: `" + verb.getForms().get("bezosobnik") + "`" + System.lineSeparator();
         }
 
+        if (verb.getForms().containsKey("gerundium")) {
+            template += "*Gerundium*: `" + verb.getForms().get("gerundium") + "`" + System.lineSeparator();
+        }
+
+        if (verb.getForms().containsKey("imiesłów przysłówkowy współczesny")) {
+            template += "*Imiesłów przysłówkowy współczesny*: `" + verb.getForms().get("imiesłów przysłówkowy współczesny") + "`" + System.lineSeparator();
+        }
+
+        if (verb.getForms().containsKey("imiesłów przymiotnikowy czynny")) {
+            template += "*Imiesłów przymiotnikowy czynny*: `" + verb.getForms().get("imiesłów przymiotnikowy czynny") + "`" + System.lineSeparator();
+        }
+
+        if (verb.getForms().containsKey("imiesłów przymiotnikowy bierny")) {
+            template += "*Imiesłów przymiotnikowy bierny*: `" + verb.getForms().get("imiesłów przymiotnikowy bierny") + "`" + System.lineSeparator();
+        }
 
         placeholders.replaceAll((k, v) -> v != null ? v : "-");
 

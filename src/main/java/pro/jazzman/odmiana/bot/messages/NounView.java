@@ -9,61 +9,43 @@ import java.util.*;
 
 @AllArgsConstructor
 public class NounView extends View {
-    private static final String HEADER = """
-        `${base}`${translation}
+    private static final String TEMPLATE = """
+        `${base}`
         
         *Część mowy*: rzeczownik
         *Rodzaj*: ${type}
-        """;
-
-    private static final String CASES = """
+        
         *Liczba pojedyncza* | *mnoga*
         ```
-        M: ${singular.mianownik} | ${plural.mianownik}
-        D: ${singular.dopelniacz} | ${plural.dopelniacz}
-        C: ${singular.celownik} | ${plural.celownik}
-        B: ${singular.biernik} | ${plural.biernik}
-        N: ${singular.narzednik} | ${plural.narzednik}
-        M: ${singular.miejscownik} | ${plural.miejscownik}
-        W: ${singular.wolacz} | ${plural.wolacz}
+        M: ${pojedyncza.mianownik} | ${mnoga.mianownik}
+        D: ${pojedyncza.dopelniacz} | ${mnoga.dopelniacz}
+        C: ${pojedyncza.celownik} | ${mnoga.celownik}
+        B: ${pojedyncza.biernik} | ${mnoga.biernik}
+        N: ${pojedyncza.narzędnik} | ${mnoga.narzędnik}
+        M: ${pojedyncza.miejscownik} | ${mnoga.miejscownik}
+        W: ${pojedyncza.wolacz} | ${mnoga.wolacz}
         ```
         """;
 
     private final Noun noun;
 
     public String render() {
-        String template = HEADER;
         var placeholders = new HashMap<String, String>();
-        placeholders.put("translation", noun.hasTranslation() ? " - " + noun.getTranslation() : "");
 
         placeholders.put("base", noun.getBase());
         placeholders.put("type", noun.getType() != null ? noun.getType().inPolish() + emoji(noun.getType()) : "---");
 
-        if (!noun.singulars().isEmpty() || !noun.plurals().isEmpty()) {
-            template += System.lineSeparator() + CASES;
+        Map<String, String> singulars = noun.get("pojedyncza");
+        Map<String, String> plurals = noun.get("mnoga");
 
-            int maxLength = maxLength(noun.singulars());
+        int length = maxLength(singulars.values().stream().toList());
+        singulars.forEach((key, value) -> placeholders.put(key, fixedString(value, length)));
 
-            placeholders.put("singular.mianownik", fixedString(noun.getSingularMianownik(), maxLength));
-            placeholders.put("singular.dopelniacz", fixedString(noun.getSingularDopelniacz(), maxLength));
-            placeholders.put("singular.celownik", fixedString(noun.getSingularCelownik(), maxLength));
-            placeholders.put("singular.biernik", fixedString(noun.getSingularBiernik(), maxLength));
-            placeholders.put("singular.narzednik", fixedString(noun.getSingularNarzednik(), maxLength));
-            placeholders.put("singular.miejscownik", fixedString(noun.getSingularMiejscownik(), maxLength));
-            placeholders.put("singular.wolacz", fixedString(noun.getSingularWolacz(), maxLength));
+        placeholders.putAll(plurals);
 
-            placeholders.put("plural.mianownik", noun.getPluralMianownik());
-            placeholders.put("plural.dopelniacz", noun.getPluralDopelniacz());
-            placeholders.put("plural.celownik", noun.getPluralCelownik());
-            placeholders.put("plural.biernik", noun.getPluralBiernik());
-            placeholders.put("plural.narzednik", noun.getPluralNarzednik());
-            placeholders.put("plural.miejscownik", noun.getPluralMiejscownik());
-            placeholders.put("plural.wolacz", noun.getPluralWolacz());
+        placeholders.replaceAll((k, v) -> v != null ? v : "-");
 
-            placeholders.replaceAll((k, v) -> v != null ? v : "-");
-        }
-
-        return StringSubstitutor.replace(template, placeholders);
+        return StringSubstitutor.replace(TEMPLATE, placeholders);
     }
 
     private String emoji(NounType type) {

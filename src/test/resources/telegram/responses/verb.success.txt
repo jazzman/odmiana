@@ -1,5 +1,7 @@
 `kochać`
 
+*Część mowy*: czasownik
+
 ⏰*Czas teraźniejszy* - *liczba pojedyncza* | *mnoga*
 ```
 1 os: kocham  | kochamy
@@ -56,6 +58,6 @@
 
 *Bezosobnik*: `kochano`
 *Gerundium*: `kochanie`
-*Imiesłów przysłówkowy współczesny*: ` kochając`
-*Imiesłów przymiotnikowy czynny*: ` kochający`
-*Imiesłów przymiotnikowy bierny*: ` kochany`
+*Imiesłów przysłówkowy współczesny*: `kochając`
+*Imiesłów przymiotnikowy czynny*: `kochający`
+*Imiesłów przymiotnikowy bierny*: `kochany`

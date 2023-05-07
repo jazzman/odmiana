@@ -69,21 +69,21 @@ public class NounParser implements Parser {
             return;
         }
 
-        noun.setSingularMianownik(table.extract(1, 0, "span.forma:eq(0)"));
-        noun.setSingularDopelniacz(table.extract(2, 0, "span.forma:eq(0)"));
-        noun.setSingularCelownik(table.extract(3, 0, "span.forma:eq(0)"));
-        noun.setSingularBiernik(table.extract(4, 0, "span.forma:eq(0)"));
-        noun.setSingularNarzednik(table.extract(5, 0, "span.forma:eq(0)"));
-        noun.setSingularMiejscownik(table.extract(6, 0, "span.forma:eq(0)"));
-        noun.setSingularWolacz(table.extract(7, 0, "span.forma:eq(0)"));
+        noun.put("pojedyncza.mianownik",    table.extract(1, 0, "span.forma:eq(0)"));
+        noun.put("pojedyncza.dopelniacz",   table.extract(2, 0, "span.forma:eq(0)"));
+        noun.put("pojedyncza.celownik",     table.extract(3, 0, "span.forma:eq(0)"));
+        noun.put("pojedyncza.biernik",      table.extract(4, 0, "span.forma:eq(0)"));
+        noun.put("pojedyncza.narzędnik",    table.extract(5, 0, "span.forma:eq(0)"));
+        noun.put("pojedyncza.miejscownik",  table.extract(6, 0, "span.forma:eq(0)"));
+        noun.put("pojedyncza.wolacz",       table.extract(7, 0, "span.forma:eq(0)"));
 
-        noun.setPluralMianownik(table.extract(1, 1, "span.forma:eq(0)"));
-        noun.setPluralDopelniacz(table.extract(2, 1, "span.forma:eq(0)"));
-        noun.setPluralCelownik(table.extract(3, 1, "span.forma:eq(0)"));
-        noun.setPluralBiernik(table.extract(4, 1, "span.forma:eq(0)"));
-        noun.setPluralNarzednik(table.extract(5, 1, "span.forma:eq(0)"));
-        noun.setPluralMiejscownik(table.extract(6, 1, "span.forma:eq(0)"));
-        noun.setPluralWolacz(table.extract(7, 1, "span.forma:eq(0)"));
+        noun.put("mnoga.mianownik",    table.extract(1, 1, "span.forma:eq(0)"));
+        noun.put("mnoga.dopelniacz",   table.extract(2, 1, "span.forma:eq(0)"));
+        noun.put("mnoga.celownik",     table.extract(3, 1, "span.forma:eq(0)"));
+        noun.put("mnoga.biernik",      table.extract(4, 1, "span.forma:eq(0)"));
+        noun.put("mnoga.narzędnik",    table.extract(5, 1, "span.forma:eq(0)"));
+        noun.put("mnoga.miejscownik",  table.extract(6, 1, "span.forma:eq(0)"));
+        noun.put("mnoga.wolacz",       table.extract(7, 1, "span.forma:eq(0)"));
     }
 
     private Table table(Element li) {

@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import pro.jazzman.odmiana.bot.messages.NounView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -16,67 +13,39 @@ import java.util.stream.Stream;
 public class Noun implements Word {
     private String base;
     private NounType type;
+    private Map<String, String> forms = new HashMap<>();
 
-    private String singularMianownik;
-    private String pluralMianownik;
-    private String singularDopelniacz;
-    private String pluralDopelniacz;
-    private String singularCelownik;
-    private String pluralCelownik;
-    private String singularBiernik;
-    private String pluralBiernik;
-    private String singularNarzednik;
-    private String pluralNarzednik;
-    private String singularMiejscownik;
-    private String pluralMiejscownik;
-    private String singularWolacz;
-    private String pluralWolacz;
+    public Noun() {
+        forms.put("pojedyncza.mianownik",    null);
+        forms.put("pojedyncza.dopelniacz",   null);
+        forms.put("pojedyncza.celownik",     null);
+        forms.put("pojedyncza.biernik",      null);
+        forms.put("pojedyncza.narzędnik",    null);
+        forms.put("pojedyncza.miejscownik",  null);
+        forms.put("pojedyncza.wolacz",       null);
 
-    private String translation;
+        forms.put("mnoga.mianownik",    null);
+        forms.put("mnoga.dopelniacz",   null);
+        forms.put("mnoga.celownik",     null);
+        forms.put("mnoga.biernik",      null);
+        forms.put("mnoga.narzędnik",    null);
+        forms.put("mnoga.miejscownik",  null);
+        forms.put("mnoga.wolacz",       null);
+    }
 
     @Override
     public String message() {
         return new NounView(this).render();
     }
 
-//    public boolean hasSingular() {
-//        return singularMianownik != null && !singularMianownik.isEmpty();
-//    }
-//
-//    public boolean hasPlural() {
-//        return pluralMianownik != null && !pluralMianownik.isEmpty();
-//    }
-
-    @Override
-    public boolean hasTranslation() {
-        return translation != null;
+    public void put(String key, String value) {
+        forms.put(key, value);
     }
 
-    public List<String> singulars() {
-        return Stream.of(
-            singularMianownik,
-            singularDopelniacz,
-            singularCelownik,
-            singularBiernik,
-            singularNarzednik,
-            singularMiejscownik,
-            singularWolacz
-        )
-            .filter(e -> e != null && !e.isBlank())
-            .collect(Collectors.toList());
-    }
-
-    public List<String> plurals() {
-        return Stream.of(
-            pluralMianownik,
-            pluralDopelniacz,
-            pluralCelownik,
-            pluralBiernik,
-            pluralNarzednik,
-            pluralMiejscownik,
-            pluralWolacz
-        )
-            .filter(e -> e != null && !e.isBlank())
-            .collect(Collectors.toList());
+    public Map<String, String> get(String pattern) {
+        return forms.entrySet()
+            .stream()
+            .filter(e -> e.getKey().startsWith(pattern))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

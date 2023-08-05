@@ -2,6 +2,7 @@ package pro.jazzman.odmiana.entities.partsofspeech;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 import pro.jazzman.odmiana.bot.messages.AdjectiveView;
 
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 public class Adjective implements Word {
+    @Nullable
     private String base;
     private Map<String, String> forms = new HashMap<>();
 

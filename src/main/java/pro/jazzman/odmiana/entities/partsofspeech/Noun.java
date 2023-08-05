@@ -2,6 +2,7 @@ package pro.jazzman.odmiana.entities.partsofspeech;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 import pro.jazzman.odmiana.bot.messages.NounView;
 
 import java.util.*;
@@ -11,7 +12,10 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 public class Noun implements Word {
+    @Nullable
     private String base;
+
+    @Nullable
     private NounType type;
     private Map<String, String> forms = new HashMap<>();
 

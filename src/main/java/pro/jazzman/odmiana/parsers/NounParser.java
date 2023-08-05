@@ -2,39 +2,49 @@ package pro.jazzman.odmiana.parsers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Service;
 import pro.jazzman.odmiana.entities.partsofspeech.NounType;
 import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import pro.jazzman.odmiana.entities.partsofspeech.Noun;
-import pro.jazzman.odmiana.services.elements.Cells;
 import pro.jazzman.odmiana.services.elements.Table;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Optional;
 
+@Service
 @Slf4j
 @AllArgsConstructor
 public class NounParser implements Parser {
-    private final Document document;
-    private final Noun noun = new Noun();
+    /**
+     * Parses the document and assign all the forms to the word
+     * @return a noun with all possible forms
+     * @throws IOException if there is an issue with content retrieval
+     */
+    public Word parse(Document document) throws IOException {
+        var noun = new Noun();
 
-    public Word parse() throws IOException {
-        setBase();
+        base(noun, document);
 
         Element li = document.selectFirst("li:has(div[data-tab-name=Odmiana])");
 
         if (li != null) {
-            setType(li);
-            setCases(li);
+            assignType(noun, li);
+            assignCases(noun, li);
         }
 
         return noun;
     }
 
-    private void setBase() {
+    /**
+     * Assigns a base form of the noun
+     * @param noun a noun
+     * @param document document to be parsed
+     */
+    private void base(Noun noun, Document document) {
         Element h1 = document.selectFirst("h1");
 
         if (h1 != null) {
@@ -44,7 +54,12 @@ public class NounParser implements Parser {
         }
     }
 
-    private void setType(Element li) {
+    /**
+     * Assign a type, i.e. masculine, feminine, neuter to the noun
+     * @param noun a noun
+     * @param li the menu list element that contains data to parse
+     */
+    private void assignType(Noun noun, Element li) {
         Element em = li.selectFirst("p:contains(rodzaj gramatyczny:) span em");
 
         if (em != null) {
@@ -60,7 +75,12 @@ public class NounParser implements Parser {
         log.warn("Unable to find noun type on the page");
     }
 
-    private void setCases(Element li) {
+    /**
+     * Assign noun cases to the noun
+     * @param noun a noun
+     * @param li the menu list element that contains data to parse
+     */
+    private void assignCases(Noun noun, Element li) {
         Table table = table(li);
 
         if (table == null) {
@@ -86,6 +106,7 @@ public class NounParser implements Parser {
         noun.put("mnoga.wolacz",       table.extract(7, 1, "span.forma:eq(0)"));
     }
 
+    @Nullable
     private Table table(Element li) {
         Element element = li.selectFirst("table");
 

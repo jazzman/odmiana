@@ -1,59 +1,92 @@
-*granatowy* - navy blue, navy
+`pyszny`
 
-*LICZBA POJEDYNCZA*
+*Część mowy*: przymiotnik
 
-*Męski* (jaki?) - 🧔🏼Osoby i 🐱zwierzęta
-*M* (Kto? Co?): granatowy
-*D* (Kogo? Czego?): *granatowego* 👈
-*C* (Komu? Czemu?): granatowemu
-*B* (Kogo? Co?): *granatowego* 👈
-*N* (Kim? Czym?): granatowym
-*M* (O kim? O czym?): granatowym
-*W* (O!): granatowy
+*Stopień równy*
 
-*Męski* (jaki?) - 🏠Rzeczy
-*M* (Kto? Co?): granatowy
-*D* (Kogo? Czego?): *granatowego* 👈
-*C* (Komu? Czemu?): granatowemu
-*B* (Kogo? Co?): granatowy
-*N* (Kim? Czym?): granatowym
-*M* (O kim? O czym?): granatowym
-*W* (O!): granatowy
+*🧔🏼Osoby i 🐱Zwierzęta* | *🙎🏼‍Męskoosobowy*
+```
+M: pyszny   | pyszni
+D: pysznego | pysznych
+C: pysznemu | pysznym
+B: pysznego | pysznych
+N: pysznym  | pysznymi
+M: pysznym  | pysznych
+W: pyszny   | pyszni
+```
 
-*Żeński* (jaka?) 👩🏼
-*M* (Kto? Co?): granatowa
-*D* (Kogo? Czego?): granatowej
-*C* (Komu? Czemu?): granatowej
-*B* (Kogo? Co?): granatową
-*N* (Kim? Czym?): granatową
-*M* (O kim? O czym?): granatowej
-*W* (O!): granatowa
+*🏠Rzeczy* | *🙎🏼‍Męskoosobowy*
+```
+M: pyszny   | pyszni
+D: pysznego | pysznych
+C: pysznemu | pysznym
+B: pyszny   | pysznych
+N: pysznym  | pysznymi
+M: pysznym  | pysznych
+W: pyszny   | pyszni
+```
 
-*Nijaki* (jakie?) 🍏
-*M* (Kto? Co?): granatowe
-*D* (Kogo? Czego?): *granatowego* 👈
-*C* (Komu? Czemu?): granatowemu
-*B* (Kogo? Co?): granatowe
-*N* (Kim? Czym?): granatowym
-*M* (O kim? O czym?): granatowym
-*W* (O!): granatowe
+*👩🏼Żeński* | *🙅🏼‍Niemęskoosobowy*
+```
+M: pyszna  | pyszne
+D: pysznej | pysznych
+C: pysznej | pysznym
+B: pyszną  | pyszne
+N: pyszną  | pysznymi
+M: pysznej | pysznych
+W: pyszna  | pyszne
+```
 
-*LICZBA MNOGA*
+*🍏Nijaki* | *🙅🏼‍Niemęskoosobowy*
+```
+M: pyszne   | pyszne
+D: pysznego | pysznych
+C: pysznemu | pysznym
+B: pyszne   | pyszne
+N: pysznym  | pysznymi
+M: pysznym  | pysznych
+W: pyszne   | pyszne
+```
 
-*Męskoosobowy* (jacy?) 🙎🏼‍
-*M* (Kto? Co?): granatowi
-*D* (Kogo? Czego?): granatowych
-*C* (Komu? Czemu?): granatowym
-*B* (Kogo? Co?): granatowych
-*N* (Kim? Czym?): granatowymi
-*M* (O kim? O czym?): granatowych
-*W* (O!): granatowi
+*Stopień wyższy*
 
-*Niemęskoosobowy* (jakie?) 🙅🏼‍
-*M* (Kto? Co?): granatowe
-*D* (Kogo? Czego?): granatowych
-*C* (Komu? Czemu?): granatowym
-*B* (Kogo? Co?): granatowe
-*N* (Kim? Czym?): granatowymi
-*M* (O kim? O czym?): granatowych
-*W* (O!): granatowe
+*🧔🏼Osoby i 🐱Zwierzęta* | *🙎🏼‍Męskoosobowy*
+```
+M: pyszniejszy   | pyszniejsi
+D: pyszniejszego | pyszniejszych
+C: pyszniejszemu | pyszniejszym
+B: pyszniejszego | pyszniejszych
+N: pyszniejszym  | pyszniejszymi
+M: pyszniejszym  | pyszniejszych
+```
+
+*🏠Rzeczy* | *🙎🏼‍Męskoosobowy*
+```
+M: pyszniejszy   | pyszniejsi
+D: pyszniejszego | pyszniejszych
+C: pyszniejszemu | pyszniejszym
+B: pyszniejszy   | pyszniejszych
+N: pyszniejszym  | pyszniejszymi
+M: pyszniejszym  | pyszniejszych
+```
+
+*👩🏼Żeński* | *🙅🏼‍Niemęskoosobowy*
+```
+M: pyszniejsza  | pyszniejsze
+D: pyszniejszej | pyszniejszych
+C: pyszniejszej | pyszniejszym
+B: pyszniejszą  | pyszniejsze
+N: pyszniejszą  | pyszniejszymi
+M: pyszniejszej | pyszniejszych
+```
+
+*🍏Nijaki* | *🙅🏼‍Niemęskoosobowy*
+```
+M: pyszniejsze   | pyszniejsze
+D: pyszniejszego | pyszniejszych
+C: pyszniejszemu | pyszniejszym
+B: pyszniejsze   | pyszniejsze
+N: pyszniejszym  | pyszniejszymi
+M: pyszniejszym  | pyszniejszych
+```
+

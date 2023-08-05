@@ -108,7 +108,6 @@ public class VerbView extends View {
             placeholders.putAll(verb.get("mnoga.przyszły"));
         }
 
-
         Map<String, String> singularImperative = verb.get("pojedyncza.rozkazujący");
         Map<String, String> pluralImperative = verb.get("mnoga.rozkazujący");
 
@@ -139,6 +138,10 @@ public class VerbView extends View {
 
         if (verb.getForms().containsKey("imiesłów przymiotnikowy bierny")) {
             template += "*Imiesłów przymiotnikowy bierny*: `" + verb.getForms().get("imiesłów przymiotnikowy bierny") + "`" + System.lineSeparator();
+        }
+
+        if (verb.getForms().containsKey("odpowiednik aspektowy")) {
+            template += "*Odpowiednik aspektowy*: `" + verb.getForms().get("odpowiednik aspektowy") + "`" + System.lineSeparator();
         }
 
         placeholders.replaceAll((k, v) -> v != null ? v : "-");

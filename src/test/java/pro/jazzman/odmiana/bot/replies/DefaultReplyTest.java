@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.matchers.Times;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+
+import static org.mockito.Mockito.when;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.mockito.Mockito.verify;
@@ -105,7 +108,7 @@ class DefaultReplyTest {
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/verb/meanings.html")));
 
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/37947/kochac/4060071/matke"), Times.exactly(1))
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/37947/kochac/4060071"), Times.exactly(1))
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/verb/final.html")));
 
             message.setText(verb);
@@ -157,7 +160,7 @@ class DefaultReplyTest {
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/meanings.html")));
 
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("https://wsjp.pl/haslo/podglad/3950/kobieta/4891319"), Times.exactly(1))
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/3950/kobieta/4891319"), Times.exactly(1))
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/final.html")));
 
             message.setText(noun);
@@ -186,13 +189,42 @@ class DefaultReplyTest {
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/plural.meanings.html")));
 
             client
-                .when(request().withMethod(HttpMethod.GET.name()).withPath("https://wsjp.pl/haslo/podglad/4088/drzwi/2848197"), Times.exactly(1))
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/4088/drzwi/2848197"), Times.exactly(1))
                 .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/noun/plural.final.html")));
 
             message.setText(noun);
             reply.onMessage(bot, update);
 
             verify(bot).send(readFile("telegram/responses/noun.plural.success.txt"), update);
+        } catch (Exception e) {
+            throw new ApplicationRuntimeException(e);
+        }
+    }
+
+    @Test
+    @DisplayName("[Adjective] Parses responses from the source and sends an expected message")
+    void onMessageAdjectiveWSJP(@Mock OdmianaBot bot) {
+        final String adjective = "pysznego";
+
+        try (
+            MockServerClient client = new MockServerClient(mockServer.getHost(), mockServer.getMappedPort(MOCK_SERVER_PORT))
+        ) {
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/szukaj/podstawowe/wyniki").withQueryStringParameter("szukaj", adjective), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/adjective/search-results.html")));
+
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/4386"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/adjective/meanings.html")));
+
+            client
+                .when(request().withMethod(HttpMethod.GET.name()).withPath("/haslo/podglad/4386/pyszny/5096946"), Times.exactly(1))
+                .respond(response().withStatusCode(HttpStatus.OK.value()).withBody(readFile("wsjp/adjective/final.html")));
+
+            message.setText(adjective);
+            reply.onMessage(bot, update);
+
+            verify(bot).send(readFile("telegram/responses/adjective.success.txt"), update);
         } catch (Exception e) {
             throw new ApplicationRuntimeException(e);
         }

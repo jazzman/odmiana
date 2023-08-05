@@ -6,5 +6,5 @@ import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import java.io.IOException;
 
 public interface Parser {
-    Word parse() throws IOException;
+    Word parse(Document document) throws IOException;
 }

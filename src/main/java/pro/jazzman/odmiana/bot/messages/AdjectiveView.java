@@ -1,6 +1,5 @@
 package pro.jazzman.odmiana.bot.messages;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringSubstitutor;
 import pro.jazzman.odmiana.entities.partsofspeech.Adjective;

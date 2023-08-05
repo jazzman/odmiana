@@ -5,20 +5,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Service;
 import pro.jazzman.odmiana.entities.partsofspeech.Adjective;
 import pro.jazzman.odmiana.entities.partsofspeech.Word;
 import pro.jazzman.odmiana.services.elements.Table;
-
 import java.io.IOException;
 
+@Service
 @AllArgsConstructor
 @Slf4j
 public class AdjectiveParser implements Parser {
-    private final Document document;
-    private final Adjective adjective = new Adjective();
+    /**
+     * Parses the document and assign all the forms to the word
+     * @return an adjective with all possible forms
+     * @throws IOException if there is an issue with content retrieval
+     */
+    public Word parse(Document document) throws IOException {
+        var adjective = new Adjective();
 
-    public Word parse() throws IOException {
-        setBase();
+        assignBase(adjective, document);
 
         Element li = document.selectFirst("li:has(div[data-tab-name=Odmiana])");
 
@@ -143,7 +148,7 @@ public class AdjectiveParser implements Parser {
         return adjective;
     }
 
-    private void setBase() {
+    private void assignBase(Adjective adjective, Document document) {
         Element h1 = document.selectFirst("h1");
 
         if (h1 != null) {

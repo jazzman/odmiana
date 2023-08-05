@@ -11,7 +11,8 @@ import pro.jazzman.odmiana.bot.OdmianaBot;
 
 @SpringBootApplication
 public class OdmianaApplication implements CommandLineRunner {
-	@Autowired private LongPollingBot odmianaBot;
+	@Autowired
+	private LongPollingBot odmianaBot;
 
 	public static void main(String[] args) {
 		SpringApplication.run(OdmianaApplication.class, args);

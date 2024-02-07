@@ -192,27 +192,28 @@ public class VerbParser implements Parser {
      */
     @Nullable
     private Table presentTenseTable(Document document) {
-        Table table = table("Czas teraźniejszy", document);
+        return table("Czas teraźniejszy", document);
 
-        if (table != null) {
-            return table;
-        }
-
-        // TODO: Recall why it is needed, add an example and integration test.
-        // Probably, this is possible when the table exists but there is no direct header to be sure.
-        // So trying to find present tense by indirect signs like the number of rows/columns
-        Element element = document.selectFirst("table.table-striped.fleksja-table.table-bordered");
-
-        if (element != null) {
-            Elements headers = element.select("thead tr th");
-            Elements rows = element.select("tbody tr");
-
-            if (headers.size() == 3 && rows.size() == 3) {
-                return Table.from(element);
-            }
-        }
-
-        return null;
+//        if (table != null) {
+//            return table;
+//        }
+//
+//        // TODO: Recall why it is needed, add an example and integration test.
+//        // Probably, this is possible when the table exists but there is no direct header to be sure.
+//        // So trying to find present tense by indirect signs like the number of rows/columns
+//        // And may be it is a bad idea: "rzucić". Commenting for now
+//        Element element = document.selectFirst("table.table-striped.fleksja-table.table-bordered");
+//
+//        if (element != null) {
+//            Elements headers = element.select("thead tr th");
+//            Elements rows = element.select("tbody tr");
+//
+//            if (headers.size() == 3 && rows.size() == 3) {
+//                return Table.from(element);
+//            }
+//        }
+//
+//        return null;
     }
 
     /**

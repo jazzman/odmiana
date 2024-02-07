@@ -1,5 +1,6 @@
 package pro.jazzman.odmiana.bot;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,15 +23,10 @@ import java.util.*;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class OdmianaBot implements LongPollingBot {
     private final TelegramLongPollingBot bot;
     private final Commands commands;
-
-    @Autowired
-    public OdmianaBot(TelegramLongPollingBot bot, Commands commands) {
-        this.bot = bot;
-        this.commands = commands;
-    }
 
     public void setMyCommands() throws TelegramApiException {
         bot.execute(

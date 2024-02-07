@@ -2,6 +2,7 @@ package pro.jazzman.odmiana.bot.replies;
 
 import jakarta.ws.rs.NotFoundException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,10 +18,10 @@ import pro.jazzman.odmiana.services.vocabulary.WSJP;
  */
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DefaultReply {
-    private WSJP wsjp;
-    private HistoryService historyService;
+    private final WSJP wsjp;
+    private final HistoryService historyService;
 
     public void onMessage(OdmianaBot bot, Update update) throws TelegramApiException {
         bot.sendChatAction(update);

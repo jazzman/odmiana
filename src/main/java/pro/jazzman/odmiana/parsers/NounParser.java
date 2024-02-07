@@ -48,7 +48,7 @@ public class NounParser implements Parser {
         Element h1 = document.selectFirst("h1");
 
         if (h1 != null) {
-            noun.setBase(h1.text());
+            noun.setBase(h1.text().replaceAll(" I", "").trim());
         } else {
             log.warn("Unable to find a header on the page to get a base form of the word");
         }

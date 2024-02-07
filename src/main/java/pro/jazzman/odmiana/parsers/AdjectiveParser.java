@@ -30,6 +30,12 @@ public class AdjectiveParser implements Parser {
         if (li != null) {
             Elements elements = li.select("table");
 
+            if (elements.isEmpty()) {
+                log.warn("Unable to find a table on the page to get a singular forms of the adjective");
+
+                return adjective;
+            }
+
             if (elements.get(0) != null) {
                 Table tableSingular = Table.from(elements.get(0));
 
@@ -68,7 +74,7 @@ public class AdjectiveParser implements Parser {
                 log.warn("Unable to find a table on the page to get a singular forms of the adjective");
             }
 
-            if (elements.get(1) != null) {
+            if (elements.size() > 1 && elements.get(1) != null) {
                 Table tablePlural = Table.from(elements.get(1));
 
                 adjective.put("mnoga.męskoosobowy.mianownik",      tablePlural.extract(2, 0, "span.forma:eq(0)"));
@@ -90,7 +96,7 @@ public class AdjectiveParser implements Parser {
                 log.warn("Unable to find a table on the page to get a plural forms of the adjective");
             }
 
-            if (elements.get(2) != null) {
+            if (elements.size() > 2 && elements.get(2) != null) {
                 Table tableSingular = Table.from(elements.get(2));
 
                 adjective.put("wyższy.pojedyncza.męskoosobowy.mianownik",      tableSingular.extract(2, 0, "span.forma:eq(0)"));
@@ -124,7 +130,7 @@ public class AdjectiveParser implements Parser {
                 log.warn("Unable to find a table on the page to get a comparative singular forms of the adjective");
             }
 
-            if (elements.get(3) != null) {
+            if (elements.size() > 3 && elements.get(3) != null) {
                 Table tablePlural = Table.from(elements.get(3));
 
                 adjective.put("wyższy.mnoga.męskoosobowy.mianownik",      tablePlural.extract(2, 0, "span.forma:eq(0)"));

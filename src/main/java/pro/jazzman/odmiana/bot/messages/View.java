@@ -31,9 +31,11 @@ abstract public class View {
             return DEFAULT_LENGTH;
         }
 
-        return maxLength(
+        int length = maxLength(
             words.toArray(String[]::new)
         );
+
+        return length > 0 ? length : DEFAULT_LENGTH;
     }
 
     public String fixedString(String word, int length) {
